@@ -2,7 +2,7 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.0.11.5](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.0.11.5/images/sha256-89d0de4a3f5503fe92a99dd505c13c2cade365f7a4b42856c9c5f9bd92c7bd27?context=explore)
+    * [tmaxcloudck/hyperauth:b1.0.13.0](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.0.11.5/images/sha256-89d0de4a3f5503fe92a99dd505c13c2cade365f7a4b42856c9c5f9bd92c7bd27?context=explore)
 
 ## Prerequisites
 openssl binary
@@ -21,7 +21,7 @@ HyperCloud Console
 	$ cd ${HYPERAUTH_HOME}
 
 	* <tag1>에는 설치할 hyperauth 버전 명시
-		예시: $ export HYPERAUTH_VERSION=1.0.5.6
+		예시: $ export HYPERAUTH_VERSION=1.0.13.0
     ```
     * 외부 네트워크 통신이 가능한 환경에서 필요한 이미지를 다운받는다.
     ```bash
@@ -45,7 +45,7 @@ HyperCloud Console
 	$ cd ${HYPERAUTH_HOME}
 
 	* <tag1>에는 설치할 hypercloud-operator 버전 명시
-		예시: $ export HYPERAUTH_VERSION=1.0.5.6
+		예시: $ export HYPERAUTH_VERSION=1.0.13.0
 	* <REGISTRY_IP_PORT>에는 폐쇄망 Docker Registry IP:PORT명시
 		예시: $ export REGISTRY=192.168.6.110:5000
 	```
@@ -84,7 +84,7 @@ HyperCloud Console
 * 생성 순서 : 아래 명령어를 실행하여 인증서 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
 ```bash
     $ openssl req -newkey rsa:4096 -nodes -sha256 -keyout hyperauth.key -x509 -subj "/C=KR/ST=Seoul/O=tmax/CN=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)" -days 365 -config <(cat /etc/ssl/openssl.cnf <(printf "[v3_ca]\nsubjectAltName=IP:$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)")) -out hyperauth.crt
-    $ CentOS의 경우 : openssl req -newkey rsa:4096 -nodes -sha256 -keyout hyperauth.key -x509 -subj "/C=KR/ST=Seoul/O=tmax/CN=(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)" -days 365 -config <(cat /etc/pki/tls/openssl.cnf <(printf "[v3_ca]\nsubjectAltName=IP:$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)")) -out hyperauth.crt
+    $ CentOS의 경우 : openssl req -newkey rsa:4096 -nodes -sha256 -keyout hyperauth.key -x509 -subj "/C=KR/ST=Seoul/O=tmax/CN=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)" -days 365 -config <(cat /etc/pki/tls/openssl.cnf <(printf "[v3_ca]\nsubjectAltName=IP:$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)")) -out hyperauth.crt
     $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
     $ cp hyperauth.crt /etc/kubernetes/pki/hyperauth.crt
 ```
