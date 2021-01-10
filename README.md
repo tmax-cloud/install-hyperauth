@@ -110,7 +110,11 @@ HyperCloud Console
     * K8s admin 기본 계정 정보 : admin@tmax.co.kr/Tmaxadmin1!
     * HyperAuth User 메뉴에서 비밀번호는 변경 가능, ID를 위해서는 clusterrole도 변경 필요
     
-## Step 4. Kafka Topic Server     
+## Step 4. Kafka Topic Server 설치
+* 목적 : `Hyperauth의 Event를 Subscribe 할수 있는 kafka server 설치`
+* 생성 순서 :
+    * 외부에서 Event를 Subscribe할 경우, kafka deployment의 
+    * [4.kafka_all.yaml](manifest/4.kafka_all.yaml) 실행 `ex) kubectl apply -f 4.kafka_all.yaml`
 
 ## Step 5. Kubernetes OIDC 연동
 * 목적 : `Kubernetes의 RBAC 시스템과 HyperAuth 인증 연동`
