@@ -109,8 +109,10 @@ HyperCloud Console
 * 비고 :
     * K8s admin 기본 계정 정보 : admin@tmax.co.kr/Tmaxadmin1!
     * HyperAuth User 메뉴에서 비밀번호는 변경 가능, ID를 위해서는 clusterrole도 변경 필요
+    
+## Step 4. Kafka Topic Server     
 
-## Step 4. Kubernetes OIDC 연동
+## Step 5. Kubernetes OIDC 연동
 * 목적 : `Kubernetes의 RBAC 시스템과 HyperAuth 인증 연동`
 * 생성 순서 :
     * Kubernetes Cluster Master Node에 접속
