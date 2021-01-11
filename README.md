@@ -116,7 +116,7 @@ HyperCloud Console
     * 외부에서 Event를 Subscribe할 경우, 4.kafka_all.yaml의 93번째 줄 172.22.6.2를 환경에 맞는 노드 IP로 변환해준다.
     * [4.kafka_all.yaml](manifest/4.kafka_all.yaml) 실행 `ex) kubectl apply -f 4.kafka_all.yaml`
 * 비고 : 
-    * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.0 이후부터 설치 적용할 것!
+    * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.10 이후부터 설치 적용할 것!
     
 ## Step 5. Kubernetes OIDC 연동
 * 목적 : `Kubernetes의 RBAC 시스템과 HyperAuth 인증 연동`
