@@ -1,4 +1,21 @@
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc
+  namespace: hyperauth
+  labels:
+    app: kafka
+spec:
+  storageClassName: csi-cephfs-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+apiVersion: v1
 kind: Service
 metadata:
   name: zookeeper
@@ -110,6 +127,15 @@ spec:
               containerPort: 9092
             - name: outside
               containerPort: 29092
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc
+          #hostPath:
+            #path: /root/keycloak/kafka_mnt              
 
 
   
