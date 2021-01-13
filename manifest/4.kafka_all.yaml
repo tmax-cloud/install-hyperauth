@@ -1,17 +1,51 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: kafka-pvc
+  name: kafka-pvc-1
   namespace: hyperauth
   labels:
-    app: kafka
+    app: kafka-pvc
 spec:
   storageClassName: csi-cephfs-sc
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc-2
+  namespace: hyperauth
+  labels:
+    app: kafka-pvc
+spec:
+  storageClassName: csi-cephfs-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc-3
+  namespace: hyperauth
+  labels:
+    app: kafka-pvc
+spec:
+  storageClassName: csi-cephfs-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 
 ---
 
@@ -29,29 +63,57 @@ spec:
       targetPort: 2181
   selector:
     app: zookeeper
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-1
+  namespace: hyperauth
+  labels:
+    app: kafka-1
+spec:
+  ports:
+    - name: kafka
+      port: 9092
+      targetPort: 9092
+  selector:
+    app: kafka-1
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafkas
+  name: kafka-2
   namespace: hyperauth
   labels:
-    app: kafka
+    app: kafka-2
 spec:
   ports:
-    - name: inside
+    - name: kafka
       port: 9092
       targetPort: 9092
-      nodePort: 32575
-    - name: outside
-      port: 29092
-      targetPort: 29092
-      nodePort: 32576
   selector:
-    app: kafka
-  type: NodePort   # ClusterIP or LoadBalancer or NodePort
+    app: kafka-2
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-3
+  namespace: hyperauth
+  labels:
+    app: kafka-3
+spec:
+  ports:
+    - name: kafka
+      port: 9092
+      targetPort: 9092
+  selector:
+    app: kafka-3
+
 
 ---
 
@@ -86,19 +148,19 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka
+  name: kafka-1
   namespace: hyperauth
   labels:
-    app: kafka
+    app: kafka-1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka
+      app: kafka-1
   template:
     metadata:
       labels:
-        app: kafka
+        app: kafka-1
     spec:
       imagePullSecrets:
         - name : docker-pull-secret
@@ -107,35 +169,139 @@ spec:
           image: wurstmeister/kafka:2.12-2.0.1
           env:
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "INSIDE://kafkas.hyperauth:9092,OUTSIDE://172.22.6.2:32576"   # Change 172.22.6.2 to NodeIP of your's
+              value: "INSIDE://kafka-1.hyperauth:9092"
             - name: KAFKA_LISTENERS
-              value: "INSIDE://:9092,OUTSIDE://:29092"
+              value: "INSIDE://:9092"
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT"
+              value: "INSIDE:PLAINTEXT"
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "INSIDE"
             - name: KAFKA_ZOOKEEPER_CONNECT
               value: "zookeeper:2181"
             - name: KAFKA_CREATE_TOPICS
-              value: "tmax:1:1"   # Topic명:Partition개수:Replica개수
+              value: "tmax:1:3"   # Topic명:Partition개수:Replica개수
             - name: KAFKA_BROKER_ID
-              value: "1"
+              value: "501"
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
+            - name: KAFKA_LOG_DIRS
+              value: "/kafka/logs"
           ports:
-            - name: inside
+            - name: client
               containerPort: 9092
-            - name: outside
-              containerPort: 29092
           volumeMounts:
             - name: kafka-data
               mountPath: /kafka
       volumes:
         - name: kafka-data
           persistentVolumeClaim:
-            claimName: kafka-pvc
-          #hostPath:
-            #path: /root/keycloak/kafka_mnt              
+            claimName: kafka-pvc-1
 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-2
+  namespace: hyperauth
+  labels:
+    app: kafka-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-2
+  template:
+    metadata:
+      labels:
+        app: kafka-2
+    spec:
+      imagePullSecrets:
+        - name : docker-pull-secret
+      containers:
+        - name: kafka
+          image: wurstmeister/kafka:2.12-2.0.1
+          env:
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INSIDE://kafka-2.hyperauth:9092"
+            - name: KAFKA_LISTENERS
+              value: "INSIDE://:9092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INSIDE:PLAINTEXT"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INSIDE"
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: "zookeeper:2181"
+            - name: KAFKA_CREATE_TOPICS
+              value: "tmax:1:3"   # Topic명:Partition개수:Replica개수
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_LOG_DIRS
+              value: "/kafka/logs"
+            - name: KAFKA_BROKER_ID
+              value: "502"
+          ports:
+            - name: client
+              containerPort: 9092
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc-2
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-3
+  namespace: hyperauth
+  labels:
+    app: kafka-3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-3
+  template:
+    metadata:
+      labels:
+        app: kafka-3
+    spec:
+      imagePullSecrets:
+        - name : docker-pull-secret
+      containers:
+        - name: kafka
+          image: wurstmeister/kafka:2.12-2.0.1
+          env:
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INSIDE://kafka-3.hyperauth:9092"
+            - name: KAFKA_LISTENERS
+              value: "INSIDE://:9092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INSIDE:PLAINTEXT"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INSIDE"
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: "zookeeper:2181"
+            - name: KAFKA_CREATE_TOPICS
+              value: "tmax:1:3"   # Topic명:Partition개수:Replica개수
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_LOG_DIRS
+              value: "/kafka/logs"
+            - name: KAFKA_BROKER_ID
+              value: "503"
+          ports:
+            - name: client
+              containerPort: 9092
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc-3
 
   
