@@ -132,7 +132,7 @@ HyperCloud Console
     --oidc-username-claim=preferred_username
     --oidc-username-prefix=-
     --oidc-groups-claim=group
-    --oidc-ca-file=/etc/kubernetes/pki/hyperauth.crt
+    --oidc-ca-file=/etc/kubernetes/pki/hypercloud-root-ca.crt
     ```
     
 * 비고 :
