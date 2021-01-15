@@ -80,13 +80,14 @@ HyperCloud Console
  ```
 
 ## Step 2. SSL 인증서 생성
-* 목적 : `HTTPS 인증을 위한 openssl 인증서를 생성하고 secret으로 변환`
-* 생성 순서 : 아래 명령어를 실행하여 인증서 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
+* 목적 : `HTTPS 인증을 위한 openssl root-ca 인증서를 생성하고 secret으로 변환`
+* 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
 ```bash
-    $ openssl req -newkey rsa:4096 -nodes -sha256 -keyout hyperauth.key -x509 -subj "/C=KR/ST=Seoul/O=tmax/CN=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)" -days 365 -config <(cat /etc/ssl/openssl.cnf <(printf "[v3_ca]\nsubjectAltName=IP:$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)")) -out hyperauth.crt
-    $ CentOS의 경우 : openssl req -newkey rsa:4096 -nodes -sha256 -keyout hyperauth.key -x509 -subj "/C=KR/ST=Seoul/O=tmax/CN=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)" -days 365 -config <(cat /etc/pki/tls/openssl.cnf <(printf "[v3_ca]\nsubjectAltName=IP:$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)")) -out hyperauth.crt
-    $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
-    $ cp hyperauth.crt /etc/kubernetes/pki/hyperauth.crt
+    $ chmod +755 generateCerts.sh
+    $ ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    $ kubectl create secret tls hyperauth-https-secret --cert=./hypercloud-root-ca.crt --key=./hypercloud-root-ca.key -n hyperauth
+    $ cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
+    $ cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
 ```
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hyperauth.crt 로 cp
