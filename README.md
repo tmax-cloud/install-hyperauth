@@ -90,7 +90,7 @@ HyperCloud Console
     $ cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
 ```
 * 비고 : 
-    * Kubernetes Master가 다중화 된 경우, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hyperauth.crt 로 cp
+    * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt 로 cp
     * MetalLB에 의해 생성된 Loadbalancer type의 ServiceIP만 인증
 
 
