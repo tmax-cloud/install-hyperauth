@@ -81,7 +81,7 @@ HyperCloud Console
 
 ## Step 2. SSL 인증서 생성
 * 목적 : `HTTPS 인증을 위한 openssl root-ca 인증서, keystore, truststore를 생성하고 secret으로 변환`
-* 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
+* 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성, kafka topic 서버와의 ssl통신을 위한 keystore, truststore 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
 ```bash
     // For Hyperauth
     $ chmod +755 generateCerts.sh
