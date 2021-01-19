@@ -71,7 +71,7 @@ HyperCloud Console
 4. [Kubernetes OIDC 연동](#step-4-kubernetes-oidc-%EC%97%B0%EB%8F%99)
 
 ## Step 1. 초기화 작업
-* 목적 : `HyperAuth 구축을 위한 초기화 작업 및 DB 구축`
+* 목적 : `HyperAuth 구축을 위한 초기화 작업, Secret생성 및 DB 구축`
 * 생성 순서 : [1.initialization.yaml](manifest/1.initialization.yaml) 실행 `ex) kubectl apply -f 1.initialization.yaml`)
 * 비고 : 아래 명령어 수행 후, Postgre Admin 접속 확인
 ```bash
