@@ -10,6 +10,17 @@ metadata:
   namespace: hyperauth
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: passwords
+  namespace: hyperauth
+type: Opaque
+data:
+  CERTS_PASSWORD: dG1heEAyMw==
+  HYPERAUTH_PASSWORD: YWRtaW4=
+  DB_PASSWORD: a2V5Y2xvYWs=
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
