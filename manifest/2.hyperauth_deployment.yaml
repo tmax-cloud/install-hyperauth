@@ -19,6 +19,9 @@ spec:
       - name: ssl
         secret:
           secretName: hyperauth-https-secret
+      - name: kafka
+        secret:
+          secretName: hyperauth-kafka-jks    
       containers:
       - name: hyperauth
         image: tmaxcloudck/hyperauth:b1.0.13.0
@@ -26,7 +29,15 @@ spec:
         - name: KEYCLOAK_USER
           value: "admin"
         - name: KEYCLOAK_PASSWORD
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: passwords
+              key: HYPERAUTH_PASSWORD
+        - name: CERTS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: passwords
+              key: CERTS_PASSWORD
         - name: PROXY_ADDRESS_FORWARDING
           value: "true"
         - name: DB_VENDOR     # postgres / tibero
@@ -40,9 +51,14 @@ spec:
         - name: DB_USER
           value: "keycloak"
         - name: DB_PASSWORD
-          value: "keycloak" 
+          valueFrom:
+            secretKeyRef:
+              name: passwords
+              key: DB_PASSWORD 
         - name: KEYCLOAK_WELCOME_THEME
           value: tmax
+        - name: TZ
+          value: Asia/Seoul  
         ports:
         - name: http
           containerPort: 8080
@@ -51,6 +67,8 @@ spec:
         volumeMounts:
         - name: ssl
           mountPath: /etc/x509/https
+        - name: kafka
+          mountPath: /etc/x509/kafka  
         readinessProbe:
           httpGet:
             path: /auth/realms/master
