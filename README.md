@@ -6,8 +6,7 @@
 
 ## Prerequisites
 openssl binary
-
-HyperCloud Console
+keytool binary
 
 ## 폐쇄망 구축 가이드
 1. **폐쇄망에서 설치하는 경우** 사용하는 image repository에 필요한 이미지를 push한다. 
@@ -129,7 +128,7 @@ HyperCloud Console
 ```
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt 로 cp
-    * MetalLB에 의해 생성된 Loadbalancer type의 ServiceIP만 인증
+    * MetalLB에 의해 생성된 Loadbalancer type의 ExternalIP만 인증
 
 
 ## Step 3. HyperAuth Deployment 배포
