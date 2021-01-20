@@ -82,6 +82,7 @@ keytool binary
 ## Step 2. SSL 인증서 생성
 * 목적 : `HTTPS 인증을 위한 openssl root-ca 인증서, keystore, truststore를 생성하고 secret으로 변환`
 * 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성, kafka topic 서버와의 ssl통신을 위한 keystore, truststore 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
+* 비고 : openssl 및 keytool을 먼저 설치 하여야 한다. ( yum install -y openssl , yum install -y java-1.8.0-openjdk-devel.x86_64, apt install openssl, apt install oracle-java8-installer)
 ```bash
     // For Hyperauth
     $ chmod +755 generateCerts.sh
