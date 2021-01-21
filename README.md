@@ -87,7 +87,7 @@ keytool binary
     // For Hyperauth
     $ chmod +755 generateCerts.sh
     $ ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ kubectl create secret tls hyperauth-https-secret --cert=./hypercloud-root-ca.crt --key=./hypercloud-root-ca.key -n hyperauth
+    $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
     $ cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
     $ cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
     
