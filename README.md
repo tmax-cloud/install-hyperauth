@@ -8,6 +8,10 @@
 ### Hyperauth
 cpu : 1
 memory: 1Gi
+
+## DB (Postgresql, tibero)
+cpu: 1
+memory: 5Gi
 Storage: 100Gi
 
 ### Kafka X 3
