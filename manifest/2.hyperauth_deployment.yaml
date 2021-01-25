@@ -62,7 +62,9 @@ spec:
         - name: KEYCLOAK_WELCOME_THEME
           value: tmax
         - name: TZ
-          value: Asia/Seoul  
+          value: Asia/Seoul
+        - name: NAMESPACE
+          value: hyperauth
         ports:
         - name: http
           containerPort: 8080
