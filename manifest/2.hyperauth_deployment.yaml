@@ -90,7 +90,7 @@ spec:
         env:
         - name: TZ
           value: Asia/Seoul
-          name: NAMESPACE
+        - name: NAMESPACE
           value: hyperauth
         volumeMounts:
         - name: log
