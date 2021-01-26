@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Script to be used for generating testing certs only for notary-server and notary-signer
-# Will also create a root-ca and intermediate-ca, deleting those keys when finished
 
 PLATFORM=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
 
@@ -15,8 +13,8 @@ if [[ "$PLATFORM" = *"Ubuntu"* ]]; then
                OPENSSLCNF=${path}
            fi
         done
-elif [[ "$PLATFORM" = *"CentOS"* ]] || [[ "$PLATFORM" = *"ProLinux"* ]]; then
-        echo "Platform is CentOS or ProLinux"
+elif [[ "$PLATFORM" = *"CentOS"* ]]; then
+        echo "Platform is CentOS"
         echo "CentOS version must be 7.x or 8.x"
         OPENSSLCNF=
         for path in /etc/pki/tls/openssl.cnf; do
@@ -34,23 +32,8 @@ if [[ -z ${OPENSSLCNF} ]]; then
     exit 1
 fi
 
-# First generates root-ca
-openssl genrsa -out "hypercloud-root-ca.key" 4096
-openssl req -new -key "hypercloud-root-ca.key" -out "hypercloud-root-ca.csr" -sha256 \
-        -subj '/C=KR/ST=CA/L=San Francisco/O=Tmax/CN=Tmax CA'
-
-cat > "hypercloud-root-ca.cnf" <<EOL
-[root_ca]
-basicConstraints = critical,CA:TRUE,pathlen:1
-keyUsage = critical, nonRepudiation, cRLSign, keyCertSign
-subjectKeyIdentifier=hash
-EOL
-
-openssl x509 -req -days 3650 -in "hypercloud-root-ca.csr" -signkey "hypercloud-root-ca.key" -sha256 \
-        -out "hypercloud-root-ca.crt" -extfile "hypercloud-root-ca.cnf" -extensions root_ca
-
-rm "hypercloud-root-ca.cnf" "hypercloud-root-ca.csr"
-
+#default certificate name
+NEW_CRT_NAME=hypercloud-module
 for i in "$@"
 do
 case $i in
@@ -70,12 +53,15 @@ case $i in
     fi
     shift # past argument=value
     ;;
+    -name=*)
+    NEW_CRT_NAME="${i#*=}"
+    shift # past argument=value
+    ;;
 esac
 done
 
 
 ###
-NEW_CRT_NAME=hyperauth
 openssl genrsa -out "${NEW_CRT_NAME}.key" 4096
 openssl req -new -key "${NEW_CRT_NAME}.key" -out "${NEW_CRT_NAME}.csr" -sha256 \
         -subj "/C=KR/ST=CA/L=San Francisco/O=Tmax/CN=${NEW_CRT_NAME}"
@@ -91,9 +77,10 @@ subjectKeyIdentifier=hash
 EOL
 
 openssl x509 -req -days 750 -in "${NEW_CRT_NAME}.csr" -sha256 \
-        -CA "hypercloud-root-ca.crt" -CAkey "hypercloud-root-ca.key"  -CAcreateserial \
+        -CA "/etc/kubernetes/pki/hypercloud-root-ca.crt" -CAkey "/etc/kubernetes/pki/hypercloud-root-ca.key"  -CAcreateserial \
         -out "${NEW_CRT_NAME}.crt" -extfile "${NEW_CRT_NAME}.cnf" -extensions ${NEW_CRT_NAME}
 # append the intermediate cert to this one to make it a proper bundle
 
 rm "${NEW_CRT_NAME}.cnf" "${NEW_CRT_NAME}.csr"
-rm hypercloud-root-ca.srl
+
+

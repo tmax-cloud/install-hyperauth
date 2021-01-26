@@ -13,8 +13,8 @@ if [[ "$PLATFORM" = *"Ubuntu"* ]]; then
                OPENSSLCNF=${path}
            fi
         done
-elif [[ "$PLATFORM" = *"CentOS"* ]]; then
-        echo "Platform is CentOS"
+elif [[ "$PLATFORM" = *"CentOS"* ]] || [[ "$PLATFORM" = *"ProLinux"* ]]; then
+	echo "Platform is CentOS or ProLinux"
         echo "CentOS version must be 7.x or 8.x"
         OPENSSLCNF=
         for path in /etc/pki/tls/openssl.cnf; do
