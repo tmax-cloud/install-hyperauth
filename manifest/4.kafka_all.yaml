@@ -148,6 +148,13 @@ spec:
             value: "yes"
         ports:
           - containerPort: 2181
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"  
 
 ---
 
@@ -221,6 +228,13 @@ spec:
           mountPath: /kafka
         - name: ssl
           mountPath: /certs
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"  
       volumes:
       - name: kafka-data
         persistentVolumeClaim:
@@ -300,6 +314,13 @@ spec:
           mountPath: /kafka
         - name: ssl
           mountPath: /certs
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"  
       volumes:
       - name: kafka-data
         persistentVolumeClaim:
@@ -379,6 +400,13 @@ spec:
           mountPath: /kafka
         - name: ssl
           mountPath: /certs
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"  
       volumes:
       - name: kafka-data
         persistentVolumeClaim:
