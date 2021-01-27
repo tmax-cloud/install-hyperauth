@@ -15,6 +15,7 @@ spec:
       labels:
         app: hyperauth
     spec:
+      serviceAccount: hyperauth-admin
       volumes:
       - name: ssl
         secret:
