@@ -28,7 +28,7 @@ spec:
           claimName: hyperauth-log-pvc          
       containers:
       - name: hyperauth
-        image: tmaxcloudck/hyperauth:b1.0.16.17
+        image: tmaxcloudck/hyperauth:b1.0.16.26
 #        args: ["-Dkeycloak.profile.feature.docker=enabled", "-b", "0.0.0.0"]                
         env:
         - name: KEYCLOAK_USER
@@ -88,7 +88,7 @@ spec:
             cpu: "1"
             memory: "1Gi"
       - name: log-collector
-        image: tmaxcloudck/hyperauth-log-collector:b0.0.0.6
+        image: tmaxcloudck/hyperauth-log-collector:b0.0.0.8
         imagePullPolicy: Always
         env:
         - name: TZ
