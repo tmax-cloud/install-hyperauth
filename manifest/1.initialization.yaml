@@ -74,11 +74,11 @@ spec:
               value: Asia/Seoul
           resources:
             limits:
-              cpu: "1"
-              memory: "5Gi"
+              cpu: "300m"
+              memory: "300Mi"
             requests:
-              cpu: "1"
-              memory: "5Gi"
+              cpu: "300m"
+              memory: "300Mi"
           ports:
             - containerPort: 5432
               name: postgresql
