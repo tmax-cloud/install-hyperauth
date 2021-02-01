@@ -6,28 +6,28 @@
     
 ## SPEC (21.01.25)
 ### Hyperauth
-cpu : 1
-memory: 1Gi
+cpu : 300m
+memory: 300Mi
 
 ## DB (Postgresql, tibero)
-cpu: 1
-memory: 5Gi
+cpu: 300
+memory: 300Mi
 Storage: 100Gi
 
 ### Kafka X 3
-cpu : 1
-memory: 1Gi
+cpu : 100m
+memory: 100Mi
 Storage: 5Gi
 
 ### Zookeeper
-cpu : 1
-memory: 1Gi
+cpu : 100m
+memory: 100Mi
 Storage: 5Gi
 
 ### Hyperauth Log Colletor
-cpu: 0.1
-memory: 128Mi
-Storage: 100Gi
+cpu: 100m
+memory: 100Mi
+Storage: 10Gi
 
 ## Prerequisites
 Java binary
