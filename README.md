@@ -14,12 +14,12 @@ cpu: 300
 memory: 300Mi
 Storage: 100Gi
 
-### Kafka X 3
+### Kafka X 3 (4.1에 미반영)
 cpu : 100m
 memory: 100Mi
 Storage: 5Gi
 
-### Zookeeper
+### Zookeeper (4.1에 미반영)
 cpu : 100m
 memory: 100Mi
 Storage: 5Gi
