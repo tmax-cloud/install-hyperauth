@@ -24,7 +24,7 @@ cpu : 100m
 memory: 100Mi
 Storage: 5Gi
 
-### Hyperauth Log Colletor
+### Hyperauth Log Colletor (4.1에 미반영)
 cpu: 100m
 memory: 100Mi
 Storage: 10Gi
