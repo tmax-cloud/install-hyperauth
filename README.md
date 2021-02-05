@@ -14,17 +14,17 @@ cpu: 300
 memory: 300Mi
 Storage: 100Gi
 
-### Kafka X 3 (4.1에 미반영)
+### Kafka X 3
 cpu : 100m
 memory: 100Mi
 Storage: 5Gi
 
-### Zookeeper (4.1에 미반영)
+### Zookeeper
 cpu : 100m
 memory: 100Mi
 Storage: 5Gi
 
-### Hyperauth Log Colletor (4.1에 미반영)
+### Hyperauth Log Colletor
 cpu: 100m
 memory: 100Mi
 Storage: 10Gi
