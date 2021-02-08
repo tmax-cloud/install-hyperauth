@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hyperauth-log-collector
+  namespace: hyperauth
+  labels:
+    hyperauth: log
+    name: hyperauth-log-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      hyperauth: log
+  template:
+    metadata:
+      name: hyperauth-log-collector
+      labels:
+        hyperauth: log
+    spec:
+      #  imagePullSecrets:
+      #  - name : docker-pull-secret
+      serviceAccountName: hyperauth-admin
+      containers:
+        - name: log-collector
+          image: tmaxcloudck/hyperauth-log-collector:b0.0.0.14
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: Asia/Seoul
+            - name: NAMESPACE
+              value: "hyperauth"
+          volumeMounts:
+            - name: log
+              mountPath: /go/src/logs
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "128Mi"
+            requests:
+              cpu: "0.1"
+              memory: "128Mi"
+      volumes:
+        - name: log
+          persistentVolumeClaim:
+            claimName: hyperauth-log-pvc
