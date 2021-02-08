@@ -6,7 +6,7 @@ metadata:
   labels:
     app: hyperauth
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: hyperauth
@@ -66,6 +66,14 @@ spec:
           value: Asia/Seoul
         - name: NAMESPACE
           value: hyperauth
+        - name: JGROUPS_DISCOVERY_PROTOCOL
+          value: "kubernetes.KUBE_PING"
+        - name: JGROUPS_DISCOVERY_PROPERTIES
+          value: "namespace=hyperauth"
+        - name: CACHE_OWNERS_COUNT
+          value: "2"
+        - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+          value: "2"  
         ports:
         - name: http
           containerPort: 8080
