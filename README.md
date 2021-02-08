@@ -200,5 +200,14 @@ keytool binary
     
 * 비고 :
     * 자동으로 kube-apiserver 가 재기동 됨
+    
+## Step 6. Hyperauth-Log-Collector
+* 목적 : `Hyperauth의 로그를 수집하고 싶은 경우에 설치`
+* 생성 순서 :
+    * [5.hyperauth_log_collector.yaml](manifest/5.hyperauth_log_collector.yaml) 실행 `ex) kubectl apply -f 5.hyperauth_log_collector.yaml`
+* 비고 : 
+    * 이중화가 고려된 로그 수집 기능
+    * hyperauth-log-collector pod 내부의 /go/src/logs 폴더의 hyperauth_1.log, hyperauth_2.log로 5초에 한번 실시간 로그를 저장한다.
+    * 하루에 한번 /go/src/logs/1, /go/src/logs/2 폴더에 백업 로그가 저장된다.
 
 ## 삭제 가이드
