@@ -57,8 +57,8 @@ spec:
             port: 8080
         resources:
           limits:
-            cpu: "300m"
-            memory: "600Mi"
+            cpu: "1"
+            memory: "2Gi"
           requests:
             cpu: "300m"
             memory: "600Mi"
