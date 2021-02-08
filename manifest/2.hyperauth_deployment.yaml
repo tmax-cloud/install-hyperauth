@@ -87,21 +87,3 @@ spec:
           requests:
             cpu: "1"
             memory: "1Gi"
-      - name: log-collector
-        image: tmaxcloudck/hyperauth-log-collector:b0.0.0.8
-        imagePullPolicy: Always
-        env:
-        - name: TZ
-          value: Asia/Seoul
-        - name: NAMESPACE
-          value: hyperauth
-        volumeMounts:
-        - name: log
-          mountPath: /go/src/logs
-        resources:
-          limits:
-            cpu: "0.1"
-            memory: "128Mi"
-          requests:
-            cpu: "0.1"
-            memory: "128Mi"            
