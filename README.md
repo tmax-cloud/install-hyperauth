@@ -2,7 +2,7 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.0.11.5](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.0.11.5/images/sha256-89d0de4a3f5503fe92a99dd505c13c2cade365f7a4b42856c9c5f9bd92c7bd27?context=explore)
+    * [tmaxcloudck/hyperauth:b1.0.14.41](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.0.14.41/images/sha256-026d600546d2131de0d33ff80f338b657633a3afb67c7a3adf40f0f7661354f3?context=explore)
 
 ## Prerequisites
 openssl binary
