@@ -6,7 +6,7 @@ metadata:
   labels:
     app: kafka-pvc
 spec:
-  storageClassName: csi-cephfs-sc
+  #storageClassName: csi-cephfs-sc
   accessModes:
   - ReadWriteOnce
   resources:
@@ -23,7 +23,7 @@ metadata:
   labels:
     app: kafka-pvc
 spec:
-  storageClassName: csi-cephfs-sc
+  #storageClassName: csi-cephfs-sc
   accessModes:
   - ReadWriteOnce
   resources:
@@ -40,7 +40,7 @@ metadata:
   labels:
     app: kafka-pvc
 spec:
-  storageClassName: csi-cephfs-sc
+  #storageClassName: csi-cephfs-sc
   accessModes:
   - ReadWriteOnce
   resources:
