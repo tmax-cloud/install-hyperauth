@@ -103,8 +103,8 @@ HyperCloud Console
     * Realm Import의 경우 Hypercloud console설치 후에 진행한다. 
     * [3.tmax-realm-export.json](manifest/3.tmax-realm-export.json), [tmaxRealmImport](manifest/tmaxRealmImport) 다운 후, 아래 명령어를 실행하여 기본 Tmax Realm 및 K8s admin 계정 생성
 ```bash
-    $ export HYPERAUTH_SERVICE_IP = $(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ export HYPERCLOUD-CONSOLE_IP = $(kubectl describe service console-lb -n console-system | grep 'LoadBalancer Ingress' | cut -d
+    $ export HYPERAUTH_SERVICE_IP=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    $ export HYPERCLOUD_CONSOLE_IP=$(kubectl describe service console-lb -n console-system | grep 'LoadBalancer Ingress' | cut -d
     $ ./tmaxRealmImport.sh $HYPERAUTH_SERVICE_IP $HYPERCLOUD-CONSOLE_IP
 ```
 * 비고 :
