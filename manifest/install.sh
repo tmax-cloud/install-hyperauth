@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source hyperauth.config
+
 # step 0  - sed manifests
 if [ $REGISTRY != "{REGISTRY}" ]; then
   sed -i 's#postgres#'${REGISTRY}'/postgres#g' 1.initialization.yaml
