@@ -22,7 +22,7 @@ spec:
       serviceAccountName: hyperauth-admin
       containers:
         - name: log-collector
-          image: tmaxcloudck/hyperauth-log-collector:b0.0.0.14
+          image: tmaxcloudck/hyperauth-log-collector:{HYPERAUTH_LOG_COLLECTOR_VERSION}
           imagePullPolicy: Always
           env:
             - name: TZ
