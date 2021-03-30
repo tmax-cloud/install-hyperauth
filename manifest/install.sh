@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source hyperauth.config
+set -x
 
 # step 0  - sed manifests
 if [ $REGISTRY != "{REGISTRY}" ]; then
