@@ -12,11 +12,11 @@ if [ $REGISTRY != "{REGISTRY}" ]; then
   sed -i 's#tmaxcloudck/hyperauth-log-collector#'${REGISTRY}'/hyperauth_log_collector#g' 5.hyperauth-log-collector.yaml
 fi
 
-sed -i 's/{POSTGRES_VERSION}/b'${POSTGRES_VERSION}'/g' 1.initialization.yaml
+sed -i 's/{POSTGRES_VERSION}/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
 sed -i 's/{HYPERAUTH_SERVER_VERSION}/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
-sed -i 's/{ZOOKEEPER_VERSION}/b'${ZOOKEEPER_VERSION}'/g' 4.kafka_all.yaml
-sed -i 's/{KAFKA_VERSION}/b'${KAFKA_VERSION}'/g' 4.kafka_all.yaml
-sed -i 's/{HYPERAUTH_LOG_COLLECTOR_VERSION}/b'${HYPERAUTH_LOG_COLLECTOR_VERSION}'/g' 5.hyperauth_log_collector.yaml
+sed -i 's/{ZOOKEEPER_VERSION}/'${ZOOKEEPER_VERSION}'/g' 4.kafka_all.yaml
+sed -i 's/{KAFKA_VERSION}/'${KAFKA_VERSION}'/g' 4.kafka_all.yaml
+sed -i 's/{HYPERAUTH_LOG_COLLECTOR_VERSION}/'${HYPERAUTH_LOG_COLLECTOR_VERSION}'/g' 5.hyperauth_log_collector.yaml
 
 # step1 1.initialization.yaml
 kubectl apply -f 1.initialization.yaml
@@ -89,7 +89,8 @@ kubectl apply -f 5.hyperauth_log_collector.yaml
 
 # step6 oidc with kubernetes ( modify kubernetes api-server manifest )
 cp /etc/kubernetes/manifests/kube-apiserver.yaml .
-yq e '.spec.containers[0].command += "--oidc-issuer-url=https://$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)/auth/realms/tmax"' -i ./kube-apiserver.yaml
+export ip=`kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7`
+yq e '.spec.containers[0].command += "--oidc-issuer-url=https://'$ip'/auth/realms/tmax"' -i ./kube-apiserver.yaml
 yq e '.spec.containers[0].command += "--oidc-client-id=hypercloud5"' -i ./kube-apiserver.yaml
 yq e '.spec.containers[0].command += "--oidc-username-claim=preferred_username"' -i ./kube-apiserver.yaml
 yq e '.spec.containers[0].command += "--oidc-username-prefix=-"' -i ./kube-apiserver.yaml
