@@ -84,6 +84,8 @@ spec:
           mountPath: /etc/x509/https
         - name: kafka
           mountPath: /etc/x509/kafka  
+        - name: log
+          mountPath: /opt/jboss/keycloak/standalone/log/hyperauth
         readinessProbe:
           httpGet:
             path: /auth/realms/master
