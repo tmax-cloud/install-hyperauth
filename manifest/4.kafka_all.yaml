@@ -142,7 +142,7 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: wurstmeister/zookeeper:{ZOOKEEPER_VERSION}
+        image: wurstmeister/zookeeper:{ZOOKEEPER_VERSION}   #3.4.6
         env:
           - name: ALLOW_ANONYMOUS_LOGIN
             value: "yes"
@@ -177,7 +177,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka:{KAFKA_VERSION}
+        image: wurstmeister/kafka:{KAFKA_VERSION}  #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
           value: "INSIDE://kafka-1.hyperauth:9092"
@@ -263,7 +263,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka:{KAFKA_VERSION}
+        image: wurstmeister/kafka:{KAFKA_VERSION}   #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
           value: "INSIDE://kafka-2.hyperauth:9092"
@@ -349,7 +349,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka:{KAFKA_VERSION}
+        image: wurstmeister/kafka:{KAFKA_VERSION}   #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
           value: "INSIDE://kafka-3.hyperauth:9092"
