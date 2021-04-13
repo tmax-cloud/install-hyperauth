@@ -40,13 +40,48 @@ keytool binary
     * 작업 디렉토리 생성 및 환경 설정
     ```bash
 	$ mkdir -p ~/hyperauth-install
+	
+	# For Hyperauth
 	$ export HYPERAUTH_HOME=~/hyperauth-install
-   $ export POSTGRES_VERSION=9.6.2-alpine
-	$ export HYPERAUTH_VERSION=<tag1>
 	$ cd ${HYPERAUTH_HOME}
-
-	* <tag1>에는 설치할 hyperauth 버전 명시
+ 	$ export POSTGRES_VERSION=9.6.2-alpine
+	$ export HYPERAUTH_VERSION=<tag1>
+   	$ export REGISTRY=<REGISTRY_IP_PORT>
+	
+	$ sudo docker pull tmaxcloudck/hyperauth:{HYPERAUTH_SERVER_VERSION}
+	$ sudo docker load < hyperauth_b${HYPERAUTH_SERVER_VERSION}.tar
+	$ sudo docker tag tmaxcloudck/hyperauth:b${HYPERAUTH_SERVER_VERSION} ${REGISTRY}/hyperauth:b${HYPERAUTH_SERVER_VERSION}
+	$ sudo docker push ${REGISTRY}/hyperauth:b${HYPERAUTH_SERVER_VERSION}
+	
+	$ sudo docker pull postgres:b${POSTGRES_VERSION}
+	$ sudo docker load < postgres_b${POSTGRES_VERSION}.tar
+	$ sudo docker tag postgres:b${POSTGRES_VERSION} ${REGISTRY}/postgres:b${POSTGRES_VERSION}
+	$ sudo docker push ${REGISTRY}/postgres:b${POSTGRES_VERSION}
+	
+	# For Hyperauth-Log-Collector
+	$ export LOG_COLLECTOR_VERSION=b1.0.0.14
+	$ sudo docker pull hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
+	$ sudo docker load < hyperauth-log-collector_b${LOG_COLLECTOR_VERSION}.tar
+	$ sudo docker tag tmaxcloudck/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION} ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
+	$ sudo docker push ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
+	
+	# For Kafka, Zookeeper
+	$ export ZOOKEEPER_VERSION=3.4.6
+	$ sudo docker pull wurstmeister/zookeeper:{ZOOKEEPER_VERSION}
+	$ sudo docker load < wurstmeister/zookeeper_b${ZOOKEEPER_VERSION}.tar
+	$ sudo docker tag wurstmeister/zookeeper:b${ZOOKEEPER_VERSION} ${REGISTRY}/zookeeper:b${ZOOKEEPER_VERSION}
+	$ sudo docker push ${REGISTRY}/zookeeper:b${ZOOKEEPER_VERSION}
+	
+	$ export KAFKA_VERSION=2.12-2.0.1
+	$ sudo docker pull wurstmeister/kafka:{KAFKA_VERSION}
+	$ sudo docker load < wurstmeister/kafka${KAFKA_VERSION}.tar
+	$ sudo docker tag wurstmeister/kafka:b${KAFKA_VERSION} ${REGISTRY}/kafka:b${KAFKA_VERSION}
+	$ sudo docker push ${REGISTRY}/kafka:b${KAFKA_VERSION}
+	
+	* <tag1>에는 설치할 hypercloud-operator 버전 명시
 		예시: $ export HYPERAUTH_VERSION=1.0.13.0
+	* <REGISTRY_IP_PORT>에는 폐쇄망 Docker Registry IP:PORT명시
+		예시: $ export REGISTRY=192.168.6.110:5000
     ```
     * 외부 네트워크 통신이 가능한 환경에서 필요한 이미지를 다운받는다.
     ```bash
@@ -60,20 +95,7 @@ keytool binary
     ```
   
 2. 위의 과정에서 생성한 tar 파일들을 `폐쇄망 환경으로 이동`시킨 뒤 사용하려는 registry에 이미지를 push한다.
-	* 작업 디렉토리 생성 및 환경 설정
-    ```bash
-	$ mkdir -p ~/hyperauth-install
-	$ export HYPERAUTH_HOME=~/hyperauth-install
-   $ export POSTGRES_VERSION=9.6.2-alpine
-	$ export HYPERAUTH_VERSION=<tag1>
-   $ export REGISTRY=<REGISTRY_IP_PORT>
-	$ cd ${HYPERAUTH_HOME}
-
-	* <tag1>에는 설치할 hypercloud-operator 버전 명시
-		예시: $ export HYPERAUTH_VERSION=1.0.13.0
-	* <REGISTRY_IP_PORT>에는 폐쇄망 Docker Registry IP:PORT명시
-		예시: $ export REGISTRY=192.168.6.110:5000
-	```
+	
     * 이미지 load 및 push
     ```bash
     # Load Images
