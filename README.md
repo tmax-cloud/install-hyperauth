@@ -2,7 +2,15 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.0.13.0](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.0.11.5/images/sha256-89d0de4a3f5503fe92a99dd505c13c2cade365f7a4b42856c9c5f9bd92c7bd27?context=explore)
+    * [tmaxcloudck/hyperauth:b1.1.0.15](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.1.0.15/images/sha256-82f2de6a30c9ac6122876558211a9a4ef2fac9d01e48257293de08a9b114ec83?context=repo)
+* hyperauth-log-collector
+    * [tmaxcloudck/hyperauth-log-collector:b1.0.0.14](https://hub.docker.com/layers/136529069/tmaxcloudck/hyperauth-log-collector/b0.0.0.14/images/sha256-5ceda6997b8189ed09394cd59f10a452056e7920381d800c5dcab523579f667c?context=explore)
+* postgres
+    * postgres:9.6.2-alpine
+* zookeeper
+    * wurstmeister/zookeeper:3.4.6
+* kafka
+    * wurstmeister/kafka:2.12-2.0.1
     
 ## SPEC (21.01.25)
 ### Hyperauth
