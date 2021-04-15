@@ -79,12 +79,17 @@ metadata:
   labels:
     app: kafka-1
 spec:
+  type: LoadBalancer
   ports:
-  - name: kafka
-    port: 9092
-    targetPort: 9092
+    - name: int
+      port: 9092
+      targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-1
+
 
 ---
 
@@ -96,10 +101,14 @@ metadata:
   labels:
     app: kafka-2
 spec:
+  type: LoadBalancer
   ports:
-  - name: kafka
-    port: 9092
-    targetPort: 9092
+    - name: int
+      port: 9092
+      targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-2
 
@@ -113,13 +122,16 @@ metadata:
   labels:
     app: kafka-3
 spec:
+  type: LoadBalancer
   ports:
-  - name: kafka
-    port: 9092
-    targetPort: 9092
+    - name: int
+      port: 9092
+      targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-3
-
 
 ---
 
@@ -180,17 +192,17 @@ spec:
         image: wurstmeister/kafka:{KAFKA_VERSION}
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-1.hyperauth:9092"
+          value: "INSIDE://kafka-1.hyperauth:9092,OUTSIDE://{KAFKA1_EXTERNAL_IP}:9093"
         - name: KAFKA_LISTENERS
-          value: "INSIDE://:9092"
+          value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-          value: "INSIDE:SSL"
+          value: "INSIDE:SSL,OUTSIDE:SSL"
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: "INSIDE"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "zookeeper:2181"
         - name: KAFKA_SSL_KEYSTORE_LOCATION
-          value: "/certs/kafka.broker1.keystore.jks"
+          value: "/certs/kafka.broker.keystore.jks"
         - name: KAFKA_SSL_KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -202,7 +214,7 @@ spec:
               name: passwords
               key: CERTS_PASSWORD
         - name: KAFKA_SSL_TRUSTSTORE_LOCATION
-          value: "/certs/kafka.broker1.truststore.jks"
+          value: "/certs/kafka.broker.truststore.jks"
         - name: KAFKA_SSL_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -266,17 +278,17 @@ spec:
         image: wurstmeister/kafka:{KAFKA_VERSION}
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-2.hyperauth:9092"
+          value: "INSIDE://kafka-2.hyperauth:9092,OUTSIDE://{KAFKA2_EXTERNAL_IP}:9093"
         - name: KAFKA_LISTENERS
-          value: "INSIDE://:9092"
+          value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-          value: "INSIDE:SSL"
+          value: "INSIDE:SSL,OUTSIDE:SSL"
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: "INSIDE"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "zookeeper:2181"
         - name: KAFKA_SSL_KEYSTORE_LOCATION
-          value: "/certs/kafka.broker2.keystore.jks"
+          value: "/certs/kafka.broker.keystore.jks"
         - name: KAFKA_SSL_KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -288,7 +300,7 @@ spec:
               name: passwords
               key: CERTS_PASSWORD
         - name: KAFKA_SSL_TRUSTSTORE_LOCATION
-          value: "/certs/kafka.broker2.truststore.jks"
+          value: "/certs/kafka.broker.truststore.jks"
         - name: KAFKA_SSL_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -352,17 +364,17 @@ spec:
         image: wurstmeister/kafka:{KAFKA_VERSION}
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-3.hyperauth:9092"
+          value: "INSIDE://kafka-3.hyperauth:9092,OUTSIDE://{KAFKA3_EXTERNAL_IP}:9093"
         - name: KAFKA_LISTENERS
-          value: "INSIDE://:9092"
+          value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-          value: "INSIDE:SSL"
+          value: "INSIDE:SSL,OUTSIDE:SSL"
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: "INSIDE"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: "zookeeper:2181"
         - name: KAFKA_SSL_KEYSTORE_LOCATION
-          value: "/certs/kafka.broker3.keystore.jks"
+          value: "/certs/kafka.broker.keystore.jks"
         - name: KAFKA_SSL_KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -374,7 +386,7 @@ spec:
               name: passwords
               key: CERTS_PASSWORD
         - name: KAFKA_SSL_TRUSTSTORE_LOCATION
-          value: "/certs/kafka.broker3.truststore.jks"
+          value: "/certs/kafka.broker.truststore.jks"
         - name: KAFKA_SSL_TRUSTSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
