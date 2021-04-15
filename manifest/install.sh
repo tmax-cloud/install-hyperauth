@@ -16,7 +16,12 @@ sed -i 's/{POSTGRES_VERSION}/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
 sed -i 's/{HYPERAUTH_SERVER_VERSION}/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
 sed -i 's/{ZOOKEEPER_VERSION}/'${ZOOKEEPER_VERSION}'/g' 4.kafka_all.yaml
 sed -i 's/{KAFKA_VERSION}/'${KAFKA_VERSION}'/g' 4.kafka_all.yaml
+sed -i 's/{KAFKA1_EXTERNAL_IP}/'${KAFKA1_EXTERNAL_IP}'/g' 4.kafka_all.yaml
+sed -i 's/{KAFKA2_EXTERNAL_IP}/'${KAFKA2_EXTERNAL_IP}'/g' 4.kafka_all.yaml
+sed -i 's/{KAFKA3_EXTERNAL_IP}/'${KAFKA3_EXTERNAL_IP}'/g' 4.kafka_all.yaml
+
 sed -i 's/{HYPERAUTH_LOG_COLLECTOR_VERSION}/'${HYPERAUTH_LOG_COLLECTOR_VERSION}'/g' 5.hyperauth_log_collector.yaml
+
 
 # step1 1.initialization.yaml
 kubectl apply -f 1.initialization.yaml
