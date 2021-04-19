@@ -53,7 +53,7 @@ keytool binary
  	$ export POSTGRES_VERSION=9.6.2-alpine
 	$ export HYPERAUTH_VERSION=<tag1>
    	$ export REGISTRY=<REGISTRY_IP_PORT>
-	$ export LOG_COLLECTOR_VERSION=b1.0.0.14
+	$ export LOG_COLLECTOR_VERSION=1.0.0.14
 	$ export ZOOKEEPER_VERSION=3.4.6
 	$ export KAFKA_VERSION=2.12-2.0.1
 	
@@ -78,9 +78,9 @@ keytool binary
 	
 	# kafka, zookeeper
 	$ sudo docker pull wurstmeister/zookeeper:{ZOOKEEPER_VERSION}
-	$ sudo docker save wurstmeister/zookeeper:{ZOOKEEPER_VERSION} > zookeeper_b${ZOOKEEPER_VERSION}.tar
+	$ sudo docker save wurstmeister/zookeeper:{ZOOKEEPER_VERSION} > zookeeper_${ZOOKEEPER_VERSION}.tar
 	$ sudo docker pull wurstmeister/kafka:{KAFKA_VERSION}
-	$ sudo docker save wurstmeister/kafka:{KAFKA_VERSION} > kafka_b${KAFKA_VERSION}.tar
+	$ sudo docker save wurstmeister/kafka:{KAFKA_VERSION} > kafka_${KAFKA_VERSION}.tar
     ```
   
 2. 위의 과정에서 생성한 tar 파일들을 `폐쇄망 환경으로 이동`시킨 뒤 사용하려는 registry에 이미지를 push한다.
@@ -92,21 +92,21 @@ keytool binary
 	$ sudo docker load < hyperauth_b${HYPERAUTH_VERSION}.tar
 	$ sudo docker load < hyperauth-log-collector_b${LOG_COLLECTOR_VERSION}.tar
         $ sudo docker load < wurstmeister/kafka${KAFKA_VERSION}.tar
-	$ sudo docker load < wurstmeister/zookeeper_b${ZOOKEEPER_VERSION}.tar
+	$ sudo docker load < wurstmeister/zookeeper${ZOOKEEPER_VERSION}.tar
 
     # Change Image's Tag For Private Registry
 	$ sudo docker tag postgres:${POSTGRES_VERSION} ${REGISTRY}/postgres:${POSTGRES_VERSION}
 	$ sudo docker tag tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} ${REGISTRY}/tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION}
 	$ sudo docker tag tmaxcloudck/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION} ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
-	$ sudo docker tag wurstmeister/kafka:b${KAFKA_VERSION} ${REGISTRY}/kafka:b${KAFKA_VERSION}
-	$ sudo docker tag wurstmeister/zookeeper:b${ZOOKEEPER_VERSION} ${REGISTRY}/zookeeper:b${ZOOKEEPER_VERSION}
+	$ sudo docker tag wurstmeister/kafka:${KAFKA_VERSION} ${REGISTRY}/kafka:${KAFKA_VERSION}
+	$ sudo docker tag wurstmeister/zookeeper:${ZOOKEEPER_VERSION} ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     
     # Push Images
 	$ sudo docker push ${REGISTRY}/postgres:${POSTGRES_VERSION}
 	$ sudo docker push ${REGISTRY}/hyperauth:b${HYPERAUTH_VERSION}
 	$ sudo docker push ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
-    	$ sudo docker push ${REGISTRY}/kafka:b${KAFKA_VERSION}
-	$ sudo docker push ${REGISTRY}/zookeeper:b${ZOOKEEPER_VERSION}
+    	$ sudo docker push ${REGISTRY}/kafka:${KAFKA_VERSION}
+	$ sudo docker push ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     ```
 
 ## 설치 가이드
