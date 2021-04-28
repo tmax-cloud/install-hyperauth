@@ -4,10 +4,15 @@ source hyperauth.config
 set -x
 
 # step 1 - delete Hyperauth component
-timeout 5m kubectl delete -f 4.kafka_all.yaml
+timeout 5m kubectl delete -f 5.kafka_deployment.yaml
 suc=`echo $?`
 if [ $suc != 0 ]; then
-  echo "Failed to delete 4.kafka_all.yaml"
+  echo "Failed to delete 5.kafka_deployment.yaml"
+fi
+timeout 5m kubectl delete -f 4.kafka_init.yaml
+suc=`echo $?`
+if [ $suc != 0 ]; then
+  echo "Failed to delete 4.kafka_init.yaml"
 fi
 timeout 5m kubectl delete -f 2.hyperauth_deployment.yaml
 suc=`echo $?`
