@@ -188,13 +188,9 @@ EOL
 * 목적 : `Hyperauth의 Event를 Subscribe 할수 있는 kafka server 설치`
 * 생성 순서 :
     * [4.kafka_init.yaml](manifest/4.kafka_init.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
-    
-```bash
-    $ {KAFKA1_EXTERNAL_IP} = $(kubectl describe service kafka-1 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ {KAFKA2_EXTERNAL_IP} = $(kubectl describe service kafka-2 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ {KAFKA3_EXTERNAL_IP} = $(kubectl describe service kafka-3 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-``` 
-
+    * {KAFKA1_EXTERNAL_IP} = $(kubectl describe service kafka-1 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    * {KAFKA2_EXTERNAL_IP} = $(kubectl describe service kafka-2 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    * {KAFKA3_EXTERNAL_IP} = $(kubectl describe service kafka-3 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * [5.kafka_deployment.yaml](manifest/4.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 4.kafka_deployment.yaml`
 * 비고 : 
     * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
