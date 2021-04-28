@@ -191,7 +191,7 @@ EOL
     * {KAFKA1_EXTERNAL_IP} = $(kubectl describe service kafka-1 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * {KAFKA2_EXTERNAL_IP} = $(kubectl describe service kafka-2 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * {KAFKA3_EXTERNAL_IP} = $(kubectl describe service kafka-3 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    * [5.kafka_deployment.yaml](manifest/4.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 4.kafka_deployment.yaml`
+    * [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
 * 비고 : 
     * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
     
