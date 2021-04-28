@@ -132,39 +132,3 @@ spec:
       targetPort: 9093
   selector:
     app: kafka-3
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: zookeeper
-  namespace: hyperauth
-  labels:
-    app: zookeeper
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: zookeeper
-  template:
-    metadata:
-      labels:
-        app: zookeeper
-    spec:
-      containers:
-      - name: zookeeper
-        image: wurstmeister/zookeeper:{ZOOKEEPER_VERSION}
-        env:
-          - name: ALLOW_ANONYMOUS_LOGIN
-            value: "yes"
-        ports:
-          - containerPort: 2181
-        resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "1"
-            memory: "1Gi"  
-  
