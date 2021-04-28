@@ -152,7 +152,7 @@ keytool binary
     // Hyperauth가 외부로 IP로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_DNS 부분 치환, 다른건 지워준다.
     $ cat > "kafka.cnf" <<EOL
 [kafka]
-subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{HYPERAUTH_EXTERNAL_IP},DNS:{HYPERAUTH_EXTERNAL_DNS}
+subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{KAFKA1_EXTERNAL_IP},IP:{KAFKA2_EXTERNAL_IP},IP:{KAFKA3_EXTERNAL_IP},DNS:{KAFKA1_EXTERNAL_DNS},DNS:{KAFKA2_EXTERNAL_DNS},DNS:{KAFKA3_EXTERNAL_DNS}
 EOL
     $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
     $ keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
