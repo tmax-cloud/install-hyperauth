@@ -41,7 +41,7 @@ keytool -keystore hyperauth.keystore.jks -alias hyperauth -certreq -file ca-requ
 openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-hyperauth -out ca-signed-hyperauth -days 3650 -CAcreateserial
 keytool -keystore hyperauth.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
 keytool -keystore hyperauth.keystore.jks -alias hyperauth -import -file ca-signed-hyperauth -storepass tmax@23 -noprompt
-kubectl create secret generic hyperauth-kafka-jks2 --from-file=./hyperauth.keystore.jks --from-file=./hyperauth.truststore.jks -n hyperauth
+kubectl create secret generic hyperauth-kafka-jks --from-file=./hyperauth.keystore.jks --from-file=./hyperauth.truststore.jks -n hyperauth
 rm ca-*
  
 ##For Kafka-Brokers
@@ -50,7 +50,7 @@ keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey
 keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
 cat > "kafka.cnf" <<EOL
 [kafka]
-subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth${HYPERAUTH_EXTERNAL_URL}
+subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth${KAFKA_EXTERNAL_URL}
 EOL
 sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
 keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
@@ -73,7 +73,8 @@ done
 kubectl apply -f 2.hyperauth_deployment.yaml
 
 # step4 Kafka Deployment
-kubectl apply -f 4.kafka_all.yaml
+kubectl apply -f 4.kafka_init.yaml
+kubectl apply -f 5.kafka_deployment.yaml
 
 # step5 oidc with kubernetes ( modify kubernetes api-server manifest )
 cp /etc/kubernetes/manifests/kube-apiserver.yaml .
