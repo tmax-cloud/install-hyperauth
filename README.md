@@ -208,7 +208,7 @@ EOL
     --oidc-username-claim=preferred_username
     --oidc-username-prefix=-
     --oidc-groups-claim=group
-    --oidc-ca-file=/etc/kubernetes/pki/hypercloud-root-ca.crt
+    --oidc-ca-file=/etc/kubernetes/pki/hyperauth.crt
     ```
     
 * 비고 :
