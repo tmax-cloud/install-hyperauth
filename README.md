@@ -150,10 +150,14 @@ keytool binary
     $ keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
     
     // Hyperauth가 외부로 IP로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_DNS 부분 치환, 다른건 지워준다.
+    
     $ cat > "kafka.cnf" <<EOL
 [kafka]
 subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{KAFKA1_EXTERNAL_IP},IP:{KAFKA2_EXTERNAL_IP},IP:{KAFKA3_EXTERNAL_IP},DNS:{KAFKA1_EXTERNAL_DNS},DNS:{KAFKA2_EXTERNAL_DNS},DNS:{KAFKA3_EXTERNAL_DNS}
 EOL
+    // 하나의 Domain을 사용할 경우 KAFKA_EXTERNAL_DNS는 path로 구분을 할 수 없고, subDomain으로 분기 처리 가능. 
+    // ex) KAFKA1_EXTERNAL_DNS = kafka-1.hyperauth.org, KAFKA2_EXTERNAL_DNS = kafka-2.hyperauth.org, KAFKA3_EXTERNAL_DNS = kafka-3.hyperauth.org
+    
     $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
     $ keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
     $ keytool -keystore kafka.broker.keystore.jks -alias broker -import -file ca-signed-broker -storepass tmax@23 -noprompt
@@ -191,6 +195,7 @@ EOL
     * echo KAFKA1_EXTERNAL_IP = $(kubectl describe service kafka-1 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * echo KAFKA2_EXTERNAL_IP = $(kubectl describe service kafka-2 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * echo KAFKA3_EXTERNAL_IP = $(kubectl describe service kafka-3 -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    * DNS인 경우 KAFKA_EXTERNAL_IP 부분을 DNS로 대체한다. 
     * [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
 * 비고 : 
     * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
