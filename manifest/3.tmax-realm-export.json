@@ -375,7 +375,7 @@
       ],
       "appauth-test": [],
       "security-admin-console": [],
-      "hypercloud4": [
+      "hypercloud5": [
         {
           "id": "f243fe37-24ad-4a5c-b42a-e3e7c67a8baf",
           "name": "uma_protection",
@@ -510,8 +510,8 @@
     },
     {
       "id": "942c6ac4-64a4-4a6f-91c6-84dcd99c3588",
-      "name": "hypercloud4",
-      "path": "/hypercloud4",
+      "name": "hypercloud5",
+      "path": "/hypercloud5",
       "attributes": {},
       "realmRoles": [],
       "clientRoles": {},
@@ -1229,9 +1229,9 @@
     },
     {
       "id": "8e0f17ee-fd09-4da2-9b4f-270e49dc0e6c",
-      "clientId": "hypercloud4",
-      "name": "hypercloud4",
-      "description": "hypercloud4 + kubernetes",
+      "clientId": "hypercloud5",
+      "name": "hypercloud5",
+      "description": "hypercloud5 + kubernetes",
       "rootUrl": "https://172.22.6.2:31304",
       "adminUrl": "https://172.22.6.2:31304",
       "baseUrl": "/",
@@ -2264,7 +2264,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "hypercloud4",
+            "included.client.audience": "hypercloud5",
             "id.token.claim": "true",
             "access.token.claim": "true"
           }
