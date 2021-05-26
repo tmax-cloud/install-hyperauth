@@ -2,7 +2,7 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.1.0.15](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.1.0.15/images/sha256-82f2de6a30c9ac6122876558211a9a4ef2fac9d01e48257293de08a9b114ec83?context=repo)
+    * [tmaxcloudck/hyperauth:b1.1.0.23](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.1.0.23/images/sha256-c2d269165872e16f82d8b300f9144caf4f7a0b382a400975088e5029a7605d12?context=repo)
 * postgres
     * postgres:9.6.2-alpine
 * zookeeper
@@ -30,11 +30,6 @@ cpu : 100m
 memory: 100Mi
 Storage: 5Gi
 
-### Hyperauth Log Colletor
-cpu: 100m
-memory: 100Mi
-Storage: 10Gi
-
 ## Prerequisites
 Java binary
 openssl binary
@@ -53,12 +48,11 @@ keytool binary
  	$ export POSTGRES_VERSION=9.6.2-alpine
 	$ export HYPERAUTH_VERSION=<tag1>
    	$ export REGISTRY=<REGISTRY_IP_PORT>
-	$ export LOG_COLLECTOR_VERSION=1.0.0.14
 	$ export ZOOKEEPER_VERSION=3.4.6
 	$ export KAFKA_VERSION=2.12-2.0.1
 	
 	* <tag1>에는 설치할 hyperauth 버전 명시
-		예시: $ export HYPERAUTH_VERSION=1.1.0.15
+		예시: $ export HYPERAUTH_VERSION=1.1.0.23
 	* <REGISTRY_IP_PORT>에는 폐쇄망 Docker Registry IP:PORT명시
 		예시: $ export REGISTRY=192.168.6.110:5000
     ```
@@ -72,15 +66,11 @@ keytool binary
 	$ sudo docker pull tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION}
 	$ sudo docker save tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} > hyperauth_b${HYPERAUTH_VERSION}.tar
 	
-	# hyperauth-log-collector
-	$ sudo docker pull tmaxcloudck/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
-	$ sudo docker save tmaxcloudck/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION} > hyperauth-log-collector_b${LOG_COLLECTOR_VERSION}.tar
-	
 	# kafka, zookeeper
-	$ sudo docker pull wurstmeister/zookeeper:{ZOOKEEPER_VERSION}
-	$ sudo docker save wurstmeister/zookeeper:{ZOOKEEPER_VERSION} > zookeeper_${ZOOKEEPER_VERSION}.tar
-	$ sudo docker pull wurstmeister/kafka:{KAFKA_VERSION}
-	$ sudo docker save wurstmeister/kafka:{KAFKA_VERSION} > kafka_${KAFKA_VERSION}.tar
+	$ sudo docker pull wurstmeister/zookeeper:${ZOOKEEPER_VERSION}
+	$ sudo docker save wurstmeister/zookeeper:${ZOOKEEPER_VERSION} > zookeeper_${ZOOKEEPER_VERSION}.tar
+	$ sudo docker pull wurstmeister/kafka:${KAFKA_VERSION}
+	$ sudo docker save wurstmeister/kafka:${KAFKA_VERSION} > kafka_${KAFKA_VERSION}.tar
     ```
   
 2. 위의 과정에서 생성한 tar 파일들을 `폐쇄망 환경으로 이동`시킨 뒤 사용하려는 registry에 이미지를 push한다.
@@ -90,21 +80,18 @@ keytool binary
     # Load Images
 	$ sudo docker load < postgres_${POSTGRES_VERSION}.tar
 	$ sudo docker load < hyperauth_b${HYPERAUTH_VERSION}.tar
-	$ sudo docker load < hyperauth-log-collector_b${LOG_COLLECTOR_VERSION}.tar
-        $ sudo docker load < wurstmeister/kafka${KAFKA_VERSION}.tar
-	$ sudo docker load < wurstmeister/zookeeper${ZOOKEEPER_VERSION}.tar
+        $ sudo docker load < kafka_${KAFKA_VERSION}.tar
+	$ sudo docker load < zookeeper_${ZOOKEEPER_VERSION}.tar
 
     # Change Image's Tag For Private Registry
 	$ sudo docker tag postgres:${POSTGRES_VERSION} ${REGISTRY}/postgres:${POSTGRES_VERSION}
-	$ sudo docker tag tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} ${REGISTRY}/tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION}
-	$ sudo docker tag tmaxcloudck/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION} ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
+	$ sudo docker tag tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} ${REGISTRY}/hyperauth:b${HYPERAUTH_VERSION}
 	$ sudo docker tag wurstmeister/kafka:${KAFKA_VERSION} ${REGISTRY}/kafka:${KAFKA_VERSION}
 	$ sudo docker tag wurstmeister/zookeeper:${ZOOKEEPER_VERSION} ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     
     # Push Images
 	$ sudo docker push ${REGISTRY}/postgres:${POSTGRES_VERSION}
 	$ sudo docker push ${REGISTRY}/hyperauth:b${HYPERAUTH_VERSION}
-	$ sudo docker push ${REGISTRY}/hyperauth-log-collector:b${LOG_COLLECTOR_VERSION}
     	$ sudo docker push ${REGISTRY}/kafka:${KAFKA_VERSION}
 	$ sudo docker push ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     ```
@@ -131,23 +118,23 @@ keytool binary
 ```bash
     // For Hyperauth
     $ chmod +755 generateCerts.sh
-    $ ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+    $ sudo ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
     $ sudo cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
     $ sudo cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
     
-    $ keytool -keystore hyperauth.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ keytool -keystore hyperauth.keystore.jks -alias hyperauth -validity 3650 -genkey -keyalg RSA -dname "CN=hyperauth" -storepass tmax@23 -keypass tmax@23
-    $ keytool -keystore hyperauth.keystore.jks -alias hyperauth -certreq -file ca-request-hyperauth -storepass tmax@23
-    $ openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-hyperauth -out ca-signed-hyperauth -days 3650 -CAcreateserial
-    $ keytool -keystore hyperauth.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ keytool -keystore hyperauth.keystore.jks -alias hyperauth -import -file ca-signed-hyperauth -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore hyperauth.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -validity 3650 -genkey -keyalg RSA -dname "CN=hyperauth" -storepass tmax@23 -keypass tmax@23
+    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -certreq -file ca-request-hyperauth -storepass tmax@23
+    $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-hyperauth -out ca-signed-hyperauth -days 3650 -CAcreateserial
+    $ sudo keytool -keystore hyperauth.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -import -file ca-signed-hyperauth -storepass tmax@23 -noprompt
     $ kubectl create secret generic hyperauth-kafka-jks --from-file=./hyperauth.keystore.jks --from-file=./hyperauth.truststore.jks -n hyperauth
 
     // For Kafka-Brokers
-    $ keytool -keystore kafka.broker.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey -keyalg RSA -dname "CN=kafka" -storepass tmax@23 -keypass tmax@23
-    $ keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
+    $ sudo keytool -keystore kafka.broker.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey -keyalg RSA -dname "CN=kafka" -storepass tmax@23 -keypass tmax@23
+    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
     
     // Hyperauth가 외부로 IP로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_DNS 부분 치환, 다른건 지워준다.
     
@@ -159,8 +146,8 @@ EOL
     // ex) KAFKA1_EXTERNAL_DNS = kafka-1.hyperauth.org, KAFKA2_EXTERNAL_DNS = kafka-2.hyperauth.org, KAFKA3_EXTERNAL_DNS = kafka-3.hyperauth.org
     
     $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
-    $ keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ keytool -keystore kafka.broker.keystore.jks -alias broker -import -file ca-signed-broker -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
+    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -import -file ca-signed-broker -storepass tmax@23 -noprompt
     $ kubectl create secret generic kafka-jks --from-file=./kafka.broker.keystore.jks --from-file=./kafka.broker.truststore.jks -n hyperauth
 ```
 * 비고 : 
