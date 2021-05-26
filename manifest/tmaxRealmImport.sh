@@ -24,7 +24,7 @@ curl 'http://'$hyperauthserver':8080/auth/admin/realms' \
   -H "content-type: application/json;charset=UTF-8" \
   --data-binary @3.tmax-realm-export.json 
 
-# Add admin-tmax.co.kr User
+# Add hc-admin@tmax.co.kr User
 curl -g -i -X POST \
    -H "Content-Type:application/json" \
    -H "Authorization:Bearer $token" \
@@ -37,13 +37,13 @@ curl -g -i -X POST \
         "department": "tmaxCloud",
         "description": "hypercloud admin"
       },
-      "username": "admin@tmax.co.kr",
+      "username": "hc-admin@tmax.co.kr",
       "emailVerified": "",
       "email": "hc-admin@tmax.co.kr"
     }' \
      'http://'$hyperauthserver':8080/auth/admin/realms/tmax/users'
 
-# Get UserID with UserName 'admin-tmax.co.kr'
+# Get UserID with UserName 'hc-admin@tmax.co.kr'
 userid=$(curl -i -X GET \
    -H "Authorization:Bearer $token" \
  'http://'$hyperauthserver':8080/auth/admin/realms/tmax/users' | grep id | cut -f 2 -d ':' | cut -f 2 -d '"' | sed 's/"/ /g' )
