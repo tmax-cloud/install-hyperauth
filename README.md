@@ -31,10 +31,10 @@ memory: 100Mi
 Storage: 5Gi
 
 ## Prerequisites
-Java binary
-openssl binary
-keytool binary
-jq binary
+- Java binary
+- openssl binary
+- keytool binary
+- jq binary
 
 ## 폐쇄망 구축 가이드
 1. **폐쇄망에서 설치하는 경우** 사용하는 image repository에 필요한 이미지를 push한다. 
