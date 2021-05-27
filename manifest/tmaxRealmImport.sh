@@ -38,7 +38,7 @@ curl -g -i -X POST \
         "description": "hypercloud admin"
       },
       "username": "hc-admin@tmax.co.kr",
-      "emailVerified": "",
+      "emailVerified": "true",
       "email": "hc-admin@tmax.co.kr"
     }' \
      'http://'$hyperauthserver':8080/auth/admin/realms/tmax/users'
