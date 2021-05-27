@@ -122,6 +122,8 @@ keytool binary
     $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
     $ sudo cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
     $ sudo cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
+    $ sudo cp hyperauth.crt /etc/kubernetes/pki/hyperauth.crt
+    $ sudo cp hyperauth.key /etc/kubernetes/pki/hyperauth.key
     
     $ sudo keytool -keystore hyperauth.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
     $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -validity 3650 -genkey -keyalg RSA -dname "CN=hyperauth" -storepass tmax@23 -keypass tmax@23
@@ -196,7 +198,7 @@ EOL
     
     ```yaml
     --oidc-issuer-url=https://{HYPERAUTH_SERVICE_IP}/auth/realms/tmax
-    --oidc-client-id=hypercloud4
+    --oidc-client-id=hypercloud5
     --oidc-username-claim=preferred_username
     --oidc-username-prefix=-
     --oidc-groups-claim=group
