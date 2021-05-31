@@ -31,10 +31,18 @@ memory: 100Mi
 Storage: 5Gi
 
 ## Prerequisites
-- Java binary
-- openssl binary
-- keytool binary
-- jq binary
+* Java binary
+* openssl binary
+* keytool binary
+* jq binary
+* Storage class
+  * 아래 명령어를 통해 storage class가 설치되어 있는지 확인한다.
+    * `$ kubectl get storageclass`
+  * 만약 아무 storage class가 없다면 아래 링크로 이동하여 rook-ceph 설치한다. 
+    * https://github.com/tmax-cloud/hypercloud-install-guide/tree/4.1/rook-ceph
+  * Storage class는 있지만 default로 설정된 것이 없다면 아래 명령어를 실행한다.
+    * ` $ kubectl patch storageclass csi-cephfs-sc -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`
+  * csi-cephfs-sc는 위 링크로 rook-ceph를 설치했을 때 생성되는 storage class이며 다른 storage class를 default로 사용해도 무관하다.
 
 ## 폐쇄망 구축 가이드
 1. **폐쇄망에서 설치하는 경우** 사용하는 image repository에 필요한 이미지를 push한다. 
