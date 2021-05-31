@@ -126,7 +126,7 @@ Storage: 5Gi
 * 비고 : openssl 및 keytool을 먼저 설치 하여야 한다. ( yum install -y openssl , yum install -y java-1.8.0-openjdk-devel.x86_64, apt install openssl, apt install oracle-java8-installer)
 ```bash
     // For Hyperauth
-    $ chmod +755 generateCerts.sh
+    $ sudo chmod +755 generateCerts.sh
     $ sudo ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
     $ sudo cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
