@@ -186,9 +186,6 @@ spec:
     - name: int
       port: 9092
       targetPort: 9092
-    - name: ext
-      port: 9093
-      targetPort: 9093
   selector:
     app: kafka-1
 
@@ -208,9 +205,6 @@ spec:
     - name: int
       port: 9092
       targetPort: 9092
-    - name: ext
-      port: 9093
-      targetPort: 9093
   selector:
     app: kafka-2
 
@@ -229,9 +223,6 @@ spec:
     - name: int
       port: 9092
       targetPort: 9092
-    - name: ext
-      port: 9093
-      targetPort: 9093
   selector:
     app: kafka-3
     
