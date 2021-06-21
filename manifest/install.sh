@@ -13,7 +13,7 @@ if [ $REGISTRY != "{REGISTRY}" ]; then
 fi
 
 sed -i 's/{POSTGRES_VERSION}/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
-sed -i 's/{HYPERAUTH_SERVER_VERSION}/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
+sed -i 's/{HYPERAUTH_VERSION}/'${HYPERAUTH_VERSION}'/g' 2.hyperauth_deployment.yaml
 sed -i 's/{ZOOKEEPER_VERSION}/'${ZOOKEEPER_VERSION}'/g' 4.kafka_all.yaml
 sed -i 's/{KAFKA_VERSION}/'${KAFKA_VERSION}'/g' 4.kafka_all.yaml
 sed -i 's/{KAFKA1_EXTERNAL_IP}/'${KAFKA1_EXTERNAL_IP}'/g' 4.kafka_all.yaml
