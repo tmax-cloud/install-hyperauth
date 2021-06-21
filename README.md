@@ -111,8 +111,19 @@ Storage: 5Gi
 3. [HyperAuth Deployment 생성](#step-3-hyperauth-deployment-%EB%B0%B0%ED%8F%AC)
 4. [Kubernetes OIDC 연동](#step-4-kubernetes-oidc-%EC%97%B0%EB%8F%99)
 
-## Step 1. 초기화 작업
-* 목적 : `HyperAuth 구축을 위한 초기화 작업, Secret생성 및 DB 구축`
+## Step 1. 초기화 작업 및 yaml 수정
+* 목적 : `HyperAuth 구축을 위한 초기화 작업, Secret생성 및 DB 구축, Yaml 버전 수정`
+* 아래의 command를 수정하여 사용하고자 하는 image 버전 정보를 수정한다.
+```bash
+    $ export POSTGRES_VERSION=9.6.2-alpine
+    $ sed -i 's/POSTGRES_VERSION/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
+    $ export HYPERAUTH_SERVER_VERSION=b1.1.0.23
+    $ sed -i 's/HYPERAUTH_SERVER_VERSION/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
+    $ export ZOOKEEPER_VERSION=3.4.6
+    $ sed -i 's/ZOOKEEPER_VERSION/'${ZOOKEEPER_VERSION}'/g' 5.kafka_deployment.yaml
+    $ export KAFKA_VERSION=2.12-2.0.1
+    $ sed -i 's/KAFKA_VERSION/'${KAFKA_VERSION}'/g' 5.kafka_deployment.yaml
+ ```
 * 생성 순서 : [1.initialization.yaml](manifest/1.initialization.yaml) 실행 `ex) kubectl apply -f 1.initialization.yaml`)
 * 비고 : 아래 명령어 수행 후, Postgre Admin 접속 확인
 ```bash
