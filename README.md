@@ -119,7 +119,13 @@ Storage: 5Gi
     $ kubectl exec -it $(kubectl get pods -n hyperauth | grep postgre | cut -d ' ' -f1) -n hyperauth -- bash
     $ psql -U keycloak keycloak
  ```
-
+* Kafka를 외부(k8s cluster 외부)로 노출하는 경우 Nginx Ingress Controller를 깔아야 한다.
+	* ingress-nginx-system ns에 nginx ingress controller가 안깔려있는 경우  https://github.com/tmax-cloud/install-ingress/tree/5.0 참조 설치 진행
+	* 설치한 (혹은 기존에 설치 되어있던) Ingress controller의 Deployment 와 Service를 지우고 다시 생성한다. (설정 추가)  [nginx-ingress-controller-kafka.yaml](manifest/1nginx-ingress-controller-kafka.yaml) 이용해서 지웠다가 생성
+```bash
+    $ kubectl delete -f nginx-ingress-controller-kafka.yaml        
+    $ kubectl apply -f nginx-ingress-controller-kafka.yaml
+ ```
 ## Step 2. SSL 인증서 생성
 * 목적 : `HTTPS 인증을 위한 openssl root-ca 인증서, keystore, truststore를 생성하고 secret으로 변환`
 * 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성, kafka topic 서버와의 ssl통신을 위한 keystore, truststore 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
@@ -147,14 +153,13 @@ Storage: 5Gi
     $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey -keyalg RSA -dname "CN=kafka" -storepass tmax@23 -keypass tmax@23
     $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
     
-    // Hyperauth가 외부로 IP로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 HYPERAUTH_EXTERNAL_DNS 부분 치환, 다른건 지워준다.
+    // Kafka가 쓸 Nginx Ingress Controller가 외부로 IP로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS 부분 치환, 나머지는 지워준다, Kafka를 외부 ( k8s cluster 외부 ) 로 노출 하지 않는 경우에는 IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS} 둘다 필요 
     
     $ cat > "kafka.cnf" <<EOL
 [kafka]
-subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{KAFKA1_EXTERNAL_IP},IP:{KAFKA2_EXTERNAL_IP},IP:{KAFKA3_EXTERNAL_IP},DNS:{KAFKA1_EXTERNAL_DNS},DNS:{KAFKA2_EXTERNAL_DNS},DNS:{KAFKA3_EXTERNAL_DNS}
+subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS}
 EOL
-    // 하나의 Domain을 사용할 경우 KAFKA_EXTERNAL_DNS는 path로 구분을 할 수 없고, subDomain으로 분기 처리 가능. 
-    // ex) KAFKA1_EXTERNAL_DNS = kafka-1.hyperauth.org, KAFKA2_EXTERNAL_DNS = kafka-2.hyperauth.org, KAFKA3_EXTERNAL_DNS = kafka-3.hyperauth.org
+    // ex) NGINX_INGRESS_CONTROLLER_EXTERNAL_IP = 172.22.6.13, NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS = 172.22.6.13.nip.io 혹은 Public DNS
     
     $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
     $ sudo keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
