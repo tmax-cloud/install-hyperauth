@@ -164,7 +164,7 @@ Storage: 5Gi
     $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey -keyalg RSA -dname "CN=kafka" -storepass tmax@23 -keypass tmax@23
     $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
     
-    // Kafka가 쓸 Nginx Ingress Controller가 외부로 IP로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS 부분 치환, 나머지는 지워준다, Kafka를 외부 ( k8s cluster 외부 ) 로 노출 하지 않는 경우에는 IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS} 둘다 필요 
+    // Kafka가 쓸 Nginx Ingress Controller가 외부로 IP로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS 부분 치환, 나머지는 지워준다, Kafka를 외부 ( k8s cluster 외부 ) 로 노출 하지 않는 경우에는 IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS} 둘다 필요 없음
     
     $ cat > "kafka.cnf" <<EOL
 [kafka]
