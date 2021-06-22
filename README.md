@@ -229,4 +229,17 @@ EOL
 * 비고 :
     * 자동으로 kube-apiserver 가 재기동 됨
 
+## Step 6. Prometheus 연동 (Optional)
+* 목적 : `Prometheus 모니터링 시스템과 HyperAuth 이벤트 metrics 연동`
+* 필수 요건 
+    * Prometheus 설치 : https://github.com/tmax-cloud/install-prometheus 참조
+    * Admin Console (tmax realm) - Events - Config - Events Config : prometheus-metric-listener 추가
+* 생성 순서 :
+    * ServiceMonitor 생성
+    * [6.hyperauth_service_monitor.yaml](manifest/6.hyperauth_service_monitor.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
+    
+* 비고 :
+    * 자동으로 Prometheus가 수집을 시작함
+
+
 ## 삭제 가이드
