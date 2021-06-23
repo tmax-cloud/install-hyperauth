@@ -182,7 +182,7 @@ metadata:
   labels:
     app: kafka-1
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: int
       port: 9092
@@ -201,7 +201,7 @@ metadata:
   labels:
     app: kafka-2
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: int
       port: 9092
@@ -219,7 +219,7 @@ metadata:
   labels:
     app: kafka-3
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: int
       port: 9092
