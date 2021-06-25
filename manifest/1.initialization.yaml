@@ -182,11 +182,14 @@ metadata:
   labels:
     app: kafka-1
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: int
       port: 9092
       targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-1
 
@@ -201,11 +204,14 @@ metadata:
   labels:
     app: kafka-2
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: int
       port: 9092
       targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-2
 
@@ -219,11 +225,14 @@ metadata:
   labels:
     app: kafka-3
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - name: int
       port: 9092
       targetPort: 9092
+    - name: ext
+      port: 9093
+      targetPort: 9093
   selector:
     app: kafka-3
     
@@ -238,7 +247,7 @@ metadata:
     app.kubernetes.io/name: ingress-nginx-system
     app.kubernetes.io/part-of: ingress-nginx-system
 data:
-  9001: "hyperauth/kafka-1:9092"
-  9002: "hyperauth/kafka-2:9092"
-  9003: "hyperauth/kafka-3:9092"
+  9001: "hyperauth/kafka-1:9093"
+  9002: "hyperauth/kafka-2:9093"
+  9003: "hyperauth/kafka-3:9093"
 
