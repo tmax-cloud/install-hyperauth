@@ -206,6 +206,7 @@ EOL
 * 목적 : `Hyperauth의 Event를 Subscribe 할수 있는 kafka server 설치`
 * 생성 순서 :
     * [4.kafka_init.yaml](manifest/4.kafka_init.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
+    * NGINX_INGRESS_CONTROLLER_EXTERNAL_IP=$(kubectl describe service ingress-nginx-system-controller -n ingress-nginx-system | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
     * [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
 * 비고 : 
     * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
