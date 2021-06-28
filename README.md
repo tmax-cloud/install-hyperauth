@@ -241,6 +241,8 @@ EOL
     
 * 비고 :
     * 자동으로 Prometheus가 수집을 시작함
+    * grafana dashboard import
+        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/hyperauth_metric.json 내용 붙여넣기
 
 
 ## 삭제 가이드
