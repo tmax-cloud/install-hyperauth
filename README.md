@@ -235,6 +235,8 @@ EOL
 * 필수 요건 
     * Prometheus 설치 : https://github.com/tmax-cloud/install-prometheus 참조
     * Admin Console (tmax realm) - Events - Config - Events Config : prometheus-metric-listener 추가
+    * [1.initialization.yaml](manifest/1.initialization.yaml)를 참고하여 passwords Secret에 HYPERAUTH_ADMIN을 추가한다. (hyperauth master realm admin의 아이디를 base64 encoding 하여 생성)
+
 * 생성 순서 :
     * ServiceMonitor 생성
     * [6.hyperauth_service_monitor.yaml](manifest/6.hyperauth_service_monitor.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
