@@ -2,7 +2,7 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.1.0.23](https://hub.docker.com/layers/tmaxcloudck/hyperauth/b1.1.0.23/images/sha256-c2d269165872e16f82d8b300f9144caf4f7a0b382a400975088e5029a7605d12?context=repo)
+    * [tmaxcloudck/hyperauth:b1.1.1.10](https://hub.docker.com/layers/155914040/tmaxcloudck/hyperauth/b1.1.1.10/images/sha256-59e943bd734aff192ca5b2114c17bb25bbe49f92e9c796030380ded68d0338bf?context=explore)
 * postgres
     * postgres:9.6.2-alpine
 * zookeeper
@@ -61,7 +61,7 @@ Storage: 5Gi
 	$ export KAFKA_VERSION=2.12-2.0.1
 	
 	* <tag1>에는 설치할 hyperauth 버전 명시
-		예시: $ export HYPERAUTH_VERSION=1.1.0.23
+		예시: $ export HYPERAUTH_VERSION=1.1.1.10
 	* <REGISTRY_IP_PORT>에는 폐쇄망 Docker Registry IP:PORT명시
 		예시: $ export REGISTRY=192.168.6.110:5000
     ```
@@ -117,7 +117,7 @@ Storage: 5Gi
 ```bash
     $ export POSTGRES_VERSION=9.6.2-alpine
     $ sed -i 's/POSTGRES_VERSION/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
-    $ export HYPERAUTH_SERVER_VERSION=b1.1.0.23
+    $ export HYPERAUTH_SERVER_VERSION=b1.1.1.10
     $ sed -i 's/HYPERAUTH_SERVER_VERSION/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
     $ export ZOOKEEPER_VERSION=3.4.6
     $ sed -i 's/ZOOKEEPER_VERSION/'${ZOOKEEPER_VERSION}'/g' 5.kafka_deployment.yaml
