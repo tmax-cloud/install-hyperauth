@@ -118,7 +118,7 @@ Storage: 5Gi
     $ export POSTGRES_VERSION=9.6.2-alpine
     $ sed -i 's/POSTGRES_VERSION/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
     $ export HYPERAUTH_SERVER_VERSION=b1.1.1.10
-    $ sed -i 's/HYPERAUTH_SERVER_VERSION/'${HYPERAUTH_SERVER_VERSION}'/g' 2.hyperauth_deployment.yaml
+    $ sed -i 's/HYPERAUTH_VERSION/'${HYPERAUTH_VERSION}'/g' 2.hyperauth_deployment.yaml
     $ export ZOOKEEPER_VERSION=3.4.6
     $ sed -i 's/ZOOKEEPER_VERSION/'${ZOOKEEPER_VERSION}'/g' 5.kafka_deployment.yaml
     $ export KAFKA_VERSION=2.12-2.0.1
