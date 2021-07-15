@@ -95,6 +95,10 @@ spec:
           value: "3"
         - name: KAFKA_LOG_DIRS
           value: "/kafka/logs"
+        - name: JMX_PORT
+          value: "1099"
+        - name: KAFKA_JMX_OPTS
+          value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka-1.hyperauth -Dcom.sun.management.jmxremote.rmi.port=1099"  
         ports:
         - name: client
           containerPort: 9092
@@ -181,6 +185,10 @@ spec:
           value: "/kafka/logs"
         - name: KAFKA_BROKER_ID
           value: "502"
+        - name: JMX_PORT
+          value: "1099"
+        - name: KAFKA_JMX_OPTS
+          value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka-2.hyperauth -Dcom.sun.management.jmxremote.rmi.port=1099"  
         ports:
         - name: client
           containerPort: 9092
@@ -267,6 +275,10 @@ spec:
           value: "/kafka/logs"
         - name: KAFKA_BROKER_ID
           value: "503"
+        - name: JMX_PORT
+          value: "1099"
+        - name: KAFKA_JMX_OPTS
+          value: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka-1.hyperauth -Dcom.sun.management.jmxremote.rmi.port=1099"  
         ports:
         - name: client
           containerPort: 9092
