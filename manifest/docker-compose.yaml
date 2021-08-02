@@ -1,0 +1,82 @@
+version: '3'
+  
+networks:
+  hyperauth-network:
+
+services:
+  postgres:
+      container_name: postgresql-docker
+      image: postgres:9.6.2-alpine
+      volumes:
+        - ./hyperauth_data:/var/lib/postgresql/data
+      networks:
+        - hyperauth-network
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: keycloak
+        TZ: Asia/Seoul
+      ports:
+        - 5432:5432
+  hyperauth1:
+      container_name: hyperauth1-docker
+      image: tmaxcloudck/hyperauth:b1.1.1.18
+      volumes:
+        - ./hyperauth_log:/opt/jboss/keycloak/standalone/log/hyperauth
+        - ./kafka_tls:/etc/x509/kafka
+        - ./hyperauth_tls:/etc/x509/https 
+      networks:
+        - hyperauth-network
+      command:
+        - "--server-config=standalone-ha.xml"     
+      environment:
+        PROXY_ADDRESS_FORWARDING: "true"
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: keycloak
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KEYCLOAK_WELCOME_THEME: tmax
+        TZ: Asia/Seoul
+        CACHE_OWNERS_COUNT: 2
+        CACHE_OWNERS_AUTH_SESSIONS_COUNT: 2
+        JGROUPS_DISCOVERY_PROTOCOL: JDBC_PING
+        JGROUPS_DISCOVERY_PROPERTIES: datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500,initialize_sql="CREATE TABLE IF NOT EXISTS JGROUPSPING ( own_addr varchar(200) NOT NULL, cluster_name varchar(200) NOT NULL, created timestamp default current_timestamp, ping_data BYTEA, constraint PK_JGROUPSPING PRIMARY KEY (own_addr, cluster_name))"
+      ports:
+        - 8080:8080
+        - 443:8443
+      depends_on:
+        - postgres
+  hyperauth2:
+      container_name: hyperauthh2-docker
+      image: tmaxcloudck/hyperauth:b1.1.1.18
+      volumes:
+        - ./hyperauth_log:/opt/jboss/keycloak/standalone/log/hyperauth
+        - ./kafka_tls:/etc/x509/kafka
+        - ./hyperauth_tls:/etc/x509/https
+      networks:
+        - hyperauth-network
+      command:
+        - "--server-config=standalone-ha.xml"
+      environment:
+        PROXY_ADDRESS_FORWARDING: "true"
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: keycloak
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KEYCLOAK_WELCOME_THEME: tmax
+        TZ: Asia/Seoul
+        CACHE_OWNERS_COUNT: 2
+        CACHE_OWNERS_AUTH_SESSIONS_COUNT: 2
+        JGROUPS_DISCOVERY_PROTOCOL: JDBC_PING        
+        JGROUPS_DISCOVERY_PROPERTIES: datasource_jndi_name=java:jboss/datasources/KeycloakDS,info_writer_sleep_time=500,initialize_sql="CREATE TABLE IF NOT EXISTS JGROUPSPING ( own_addr varchar(200) NOT NULL, cluster_name varchar(200) NOT NULL, created timestamp default current_timestamp, ping_data BYTEA, constraint PK_JGROUPSPING PRIMARY KEY (own_addr, cluster_name))"
+      ports:
+        - 8081:8080
+        - 444:8443
+      depends_on:
+        - postgres
