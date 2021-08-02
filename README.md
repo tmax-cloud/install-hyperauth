@@ -109,7 +109,8 @@ Storage: 5Gi
 1. [초기화 작업](#step-1-%EC%B4%88%EA%B8%B0%ED%99%94-%EC%9E%91%EC%97%85)
 2. [SSL 인증서 생성](#step-2-ssl-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EC%83%9D%EC%84%B1)
 3. [HyperAuth Deployment 생성](#step-3-hyperauth-deployment-%EB%B0%B0%ED%8F%AC)
-4. [Kubernetes OIDC 연동](#step-4-kubernetes-oidc-%EC%97%B0%EB%8F%99)
+4. [Kafka Topic Server 설치](#step-4-kafka-topic-server-%EC%84%A4%EC%B9%98)
+5. [Kubernetes OIDC 연동](#step-5-kubernetes-oidc-%EC%97%B0%EB%8F%99)
 
 ## Step 1. 초기화 작업 및 yaml 수정
 * 목적 : `HyperAuth 구축을 위한 초기화 작업, Secret생성 및 DB 구축, Yaml 버전 수정`
