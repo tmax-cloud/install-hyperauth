@@ -28,7 +28,7 @@ spec:
           claimName: hyperauth-log-pvc          
       containers:
       - name: hyperauth
-        image: tmaxcloudck/hyperauth:{HYPERAUTH_VERSION}  #b1.1.1.10
+        image: tmaxcloudck/hyperauth:HYPERAUTH_VERSION  #b1.1.1.10
         args: ["-c standalone-ha.xml", "-Dkeycloak.profile.feature.docker=enabled -b 0.0.0.0"]                
         env:
         - name: KEYCLOAK_USER
