@@ -250,8 +250,9 @@ EOL
 
 ## 참고자료 ( Ingress를 사용해서 hyperauth를 노출하려고 하는 경우 )
 * hyperauth_ingress.yaml 에서 host 및 hosts를 환경에 맞는 dns로 수정하고 apply한다.
-* hypercloud-root-ca.crt, hyperauth.crt를 /etc/pki/ca-trust/source/anchors/ 밑에 복사한다. (centOS 기준)
-* update-ca-trust  	
+* 모든 마스터 노드에 관해서 self-signed 인증서의 경우, os의 ca store에 등록하는 과정을 거쳐야 k8s가 공인 인증서로 써 신뢰한다. 
+    * hypercloud-root-ca.crt, hyperauth.crt를 /etc/pki/ca-trust/source/anchors/ 밑에 복사한다. (centOS 기준)
+    * update-ca-trust  	
     
 
 ## 삭제 가이드
