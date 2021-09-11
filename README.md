@@ -248,4 +248,10 @@ EOL
         * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/hyperauth_metric.json 내용 붙여넣기
 
 
+## 참고자료 ( Ingress를 사용해서 hyperauth를 노출하려고 하는 경우 )
+* hyperauth_ingress.yaml 에서 host 및 hosts를 환경에 맞는 dns로 수정하고 apply한다.
+* hypercloud-root-ca.crt, hyperauth.crt를 /etc/pki/ca-trust/source/anchors/ 밑에 복사한다. (centOS 기준)
+* update-ca-trust  	
+    
+
 ## 삭제 가이드
