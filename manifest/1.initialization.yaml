@@ -75,7 +75,7 @@ metadata:
 spec:
   #storageClassName: csi-cephfs-sc
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 50Gi
