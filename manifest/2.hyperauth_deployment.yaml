@@ -26,7 +26,7 @@ spec:
       - name: log
         persistentVolumeClaim:
           claimName: hyperauth-log-pvc
-      - name: picture
+      - name: picture  # Only needed Version After tmaxcloudck/hyperauth:b1.1.1.33
         persistentVolumeClaim:
           claimName: hyperauth-profile-picture    
       containers:
@@ -89,7 +89,7 @@ spec:
           mountPath: /etc/x509/kafka  
         - name: log
           mountPath: /opt/jboss/keycloak/standalone/log/hyperauth
-        - name: picture
+        - name: picture  # Only needed Version After tmaxcloudck/hyperauth:b1.1.1.33
           mountPath: /opt/jboss/keycloak/welcome-content/profile-picture  
         readinessProbe:
           httpGet:
