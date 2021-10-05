@@ -25,7 +25,10 @@ spec:
           secretName: hyperauth-kafka-jks
       - name: log
         persistentVolumeClaim:
-          claimName: hyperauth-log-pvc          
+          claimName: hyperauth-log-pvc
+      - name: picture
+        persistentVolumeClaim:
+          claimName: hyperauth-profile-picture    
       containers:
       - name: hyperauth
         image: tmaxcloudck/hyperauth:HYPERAUTH_VERSION  #b1.1.1.10
@@ -86,6 +89,8 @@ spec:
           mountPath: /etc/x509/kafka  
         - name: log
           mountPath: /opt/jboss/keycloak/standalone/log/hyperauth
+        - name: picture
+          mountPath: /opt/jboss/keycloak/welcome-content/profile-picture  
         readinessProbe:
           httpGet:
             path: /auth/realms/master
