@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: hyperauth
-  namespace: hyperauth
+  namespace: monitoring
   labels:
     app: hyperauth
     release: prometheus
