@@ -55,7 +55,7 @@ spec:
         image: wurstmeister/kafka:KAFKA_VERSION  #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-1.hyperauth:9092,OUTSIDE://{KAFKA_EXTERNAL_URL}"
+          value: "INSIDE://kafka-1.hyperauth:9092,OUTSIDE://{INGRESS_CONTROLLER_URL}:9001"
         - name: KAFKA_LISTENERS
           value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
@@ -145,7 +145,7 @@ spec:
         image: wurstmeister/kafka:KAFKA_VERSION  #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-2.hyperauth:9092,OUTSIDE://{KAFKA_EXTERNAL_URL}"
+          value: "INSIDE://kafka-2.hyperauth:9092,OUTSIDE://{INGRESS_CONTROLLER_URL}:9002"
         - name: KAFKA_LISTENERS
           value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
@@ -235,7 +235,7 @@ spec:
         image: wurstmeister/kafka:KAFKA_VERSION  #2.12-2.0.1
         env:
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: "INSIDE://kafka-3.hyperauth:9092,OUTSIDE://{KAFKA_EXTERNAL_URL}"
+          value: "INSIDE://kafka-3.hyperauth:9092,OUTSIDE://{INGRESS_CONTROLLER_URL}:9003"
         - name: KAFKA_LISTENERS
           value: "INSIDE://:9092,OUTSIDE://:9093"
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
