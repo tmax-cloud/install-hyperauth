@@ -67,9 +67,9 @@ spec:
     - kafka-1.hyperauth
     - kafka-2.hyperauth
     - kafka-3.hyperauth
-    - {INGRESS_CONTROLLER_DNS}
+    - {KAFKA_EXTERNAL_DNS}
   ipAddresses:
-    - {INGRESS_CONTROLLER_IP}
+    - {KAFKA_EXTERNAL_IP}
   isCA: false
   keySize: 2048
   duration: 8760h # 360d=1y
