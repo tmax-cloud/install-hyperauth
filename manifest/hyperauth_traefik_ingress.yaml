@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    ingress.tmaxcloud.org/name: hyperauth
+  annotations: 
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    ## token validation이 필요할 경우 설정 
+    #traefik.ingress.kubernetes.io/router.middlewares: jwt-decode-auth@file
+  name: hyperauth-api-gateway-ingress
+  namespace: hyperauth
+spec:
+  ingressClassName: tmax-cloud
+  rules:
+    - host: hyperauth.172.22.6.18.nip.io
+      http:
+        paths:
+          - backend:
+              service:
+                name: hyperauth
+                port:
+                  number: 8080
+                  # name: https
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - hyperauth.172.22.6.18.nip.io
+      secretName: hyperauth-https-secret
