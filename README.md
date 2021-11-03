@@ -142,7 +142,20 @@ Storage: 5Gi
 * 목적 : `HTTPS 인증을 위한 인증서, kafka와의 통신을 위한 keystore, truststore를 생성하고 secret으로 변환`
 * 생성 순서 : 
 	* cert-manager가 설치되어 있고, tmaxcloud-issuer (ClusterIssuer) 가 생성되어 있다고 가정한다. 
-		* 설치가 안되어 있는 경우,   	
+		* 설치가 안되어 있는 경우, [tmaxcloud-issuer.yaml](manifest/tmaxcloud-issuer.yaml) 실행 `ex) kubectl apply -f tmaxcloud-issuer.yaml`) 
+	* [hyperauth_certs.yaml](manifest/hyperauth_certs.yaml) 의 변수를 상황에 맞게 치환한다. 안쓰는 변수 부분은 지워준다.
+		* Hyperauth
+			* Hyperauth를 IP로 노출하는 경우, {HYPERAUTH_EXTERNAL_IP} 세팅, dnsName 부분 전체 삭제
+			* Hyperauth를 DNS로 노출하는 경우, {HYPERAUTH_EXTERNAL_DNS} 세팅, ipAddresses 부분 전체 삭제
+		* Kafka
+			* Kafka를 외부로 노출하지 않는 경우, {INGRESS_CONTROLLER_DNS} 삭제, ipAddresses 부분 전체 삭제
+			* Kafka를 외부로 IP로 노출하는 경우, {INGRESS_CONTROLLER_IP} 세팅
+				* 3개의 External IP로 노출하는 경우, 3개 모두 세팅
+				* NodePort로 노출하는 경우, Node IP 세팅
+			* Kafka를 Ingress Controller를 통해 노출하는 경우, 적절한 값으로 세팅
+	*  [hyperauth_certs.yaml](manifest/hyperauth_certs.yaml) 실행 `ex) kubectl apply -f hyperauth_certs.yaml`)
+	*  	 	  	
+		 	
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt, /etc/kubernetes/pki/hyperauth.crt 로 cp
     * MetalLB에 의해 생성된 Loadbalancer type의 ExternalIP만 인증
