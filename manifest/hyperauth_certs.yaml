@@ -4,7 +4,7 @@ metadata:
   name: hyperauth-certificate
   namespace: hyperauth
 spec:
-  secretName: hyperauth-certs-by-certmanager
+  secretName: hyperauth-https-secret
   duration: 8760h # 360d=1y
   renewBefore: 720h # 30d
   isCA: false
@@ -30,7 +30,7 @@ metadata:
   name: hyperauth-kafka-jks-certificate
   namespace: hyperauth
 spec:
-  secretName: hyperauth-kafka-jks-by-certmanager
+  secretName: hyperauth-kafka-jks
   commonName: hyperauth
   isCA: false
   keySize: 2048
@@ -61,7 +61,7 @@ metadata:
   name: kafka-broker-jks-certificate
   namespace: hyperauth
 spec:
-  secretName: kafka-broker-jks-by-certmanager 
+  secretName: kafka-jks
   commonName: kafka
   dnsNames:
     - kafka-1.hyperauth
