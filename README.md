@@ -2,7 +2,7 @@
 
 ## 구성 요소 및 버전
 * hyperauth
-    * [tmaxcloudck/hyperauth:b1.1.1.10](https://hub.docker.com/layers/155914040/tmaxcloudck/hyperauth/b1.1.1.10/images/sha256-59e943bd734aff192ca5b2114c17bb25bbe49f92e9c796030380ded68d0338bf?context=explore)
+    * [tmaxcloudck/hyperauth:latest](https://hub.docker.com/layers/tmaxcloudck/hyperauth/latest/images/sha256-b4c423520434c37f4c1166f94de7cfa49be43f51efe9f19da10776375b3fd840?context=explore)
 * postgres
     * postgres:9.6.2-alpine
 * zookeeper
