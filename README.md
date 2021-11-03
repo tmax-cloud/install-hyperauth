@@ -139,45 +139,10 @@ Storage: 5Gi
     $ kubectl apply -f nginx-ingress-controller-kafka.yaml
  ```
 ## Step 2. SSL 인증서 생성
-* 목적 : `HTTPS 인증을 위한 openssl root-ca 인증서, keystore, truststore를 생성하고 secret으로 변환`
-* 생성 순서 : generateCerts.sh shell을 실행하여 root-ca 인증서 생성, kafka topic 서버와의 ssl통신을 위한 keystore, truststore 생성 및 secret을 생성 (Master Node의 특정 directory 내부에서 실행 권장)
-* 비고 : openssl 및 keytool을 먼저 설치 하여야 한다. ( yum install -y openssl , yum install -y java-1.8.0-openjdk-devel.x86_64, apt install openssl, apt install openjdk-8-jre-headless)
-```bash
-    // For Hyperauth
-    $ sudo chmod +755 generateCerts.sh
-    $ sudo ./generateCerts.sh -ip=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ kubectl create secret tls hyperauth-https-secret --cert=./hyperauth.crt --key=./hyperauth.key -n hyperauth
-    $ sudo cp hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
-    $ sudo cp hypercloud-root-ca.key /etc/kubernetes/pki/hypercloud-root-ca.key
-    $ sudo cp hyperauth.crt /etc/kubernetes/pki/hyperauth.crt
-    $ sudo cp hyperauth.key /etc/kubernetes/pki/hyperauth.key
-    
-    $ sudo keytool -keystore hyperauth.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -validity 3650 -genkey -keyalg RSA -dname "CN=hyperauth" -storepass tmax@23 -keypass tmax@23
-    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -certreq -file ca-request-hyperauth -storepass tmax@23
-    $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-hyperauth -out ca-signed-hyperauth -days 3650 -CAcreateserial
-    $ sudo keytool -keystore hyperauth.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ sudo keytool -keystore hyperauth.keystore.jks -alias hyperauth -import -file ca-signed-hyperauth -storepass tmax@23 -noprompt
-    $ kubectl create secret generic hyperauth-kafka-jks --from-file=./hyperauth.keystore.jks --from-file=./hyperauth.truststore.jks -n hyperauth
-
-    // For Kafka-Brokers
-    $ sudo keytool -keystore kafka.broker.truststore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -validity 3650 -genkey -keyalg RSA -dname "CN=kafka" -storepass tmax@23 -keypass tmax@23
-    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -certreq -file ca-request-broker -storepass tmax@23
-    
-    // Kafka가 쓸 Nginx Ingress Controller가 외부로 IP로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_IP 부분 치환, DNS로 노출되어 있는 경우 NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS 부분 치환, 나머지는 지워준다, Kafka를 외부 ( k8s cluster 외부 ) 로 노출 하지 않는 경우에는 IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS} 둘다 필요 없음
-    
-    $ cat > "kafka.cnf" <<EOL
-[kafka]
-subjectAltName = DNS:kafka-1.hyperauth,DNS:kafka-2.hyperauth,DNS:kafka-3.hyperauth,IP:{NGINX_INGRESS_CONTROLLER_EXTERNAL_IP},DNS:{NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS}
-EOL
-    // ex) NGINX_INGRESS_CONTROLLER_EXTERNAL_IP = 172.22.6.13, NGINX_INGRESS_CONTROLLER_EXTERNAL_DNS = 172.22.6.13.nip.io 혹은 Public DNS
-    
-    $ sudo openssl x509 -req -CA /etc/kubernetes/pki/hypercloud-root-ca.crt -CAkey /etc/kubernetes/pki/hypercloud-root-ca.key -in ca-request-broker -out ca-signed-broker -days 3650 -CAcreateserial -extfile "kafka.cnf" -extensions kafka -sha256
-    $ sudo keytool -keystore kafka.broker.keystore.jks -alias ca-cert -import -file /etc/kubernetes/pki/hypercloud-root-ca.crt -storepass tmax@23 -noprompt
-    $ sudo keytool -keystore kafka.broker.keystore.jks -alias broker -import -file ca-signed-broker -storepass tmax@23 -noprompt
-    $ kubectl create secret generic kafka-jks --from-file=./kafka.broker.keystore.jks --from-file=./kafka.broker.truststore.jks -n hyperauth
-```
+* 목적 : `HTTPS 인증을 위한 인증서, kafka와의 통신을 위한 keystore, truststore를 생성하고 secret으로 변환`
+* 생성 순서 : 
+	* cert-manager가 설치되어 있고, tmaxcloud-issuer (ClusterIssuer) 가 생성되어 있다고 가정한다. 
+		* 설치가 안되어 있는 경우,   	
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt, /etc/kubernetes/pki/hyperauth.crt 로 cp
     * MetalLB에 의해 생성된 Loadbalancer type의 ExternalIP만 인증
