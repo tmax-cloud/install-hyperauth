@@ -131,35 +131,35 @@ Storage: 5Gi
     $ kubectl exec -it $(kubectl get pods -n hyperauth | grep postgre | cut -d ' ' -f1) -n hyperauth -- bash
     $ psql -U keycloak keycloak
  ```
-* Kafka를 외부(k8s cluster 외부)로 노출하는 경우 Nginx Ingress Controller를 깔아야 한다.
-	* ingress-nginx-system ns에 nginx ingress controller가 안깔려있는 경우  https://github.com/tmax-cloud/install-ingress/tree/5.0 참조 설치 진행
-	* 설치한 (혹은 기존에 설치 되어있던) Ingress controller의 Deployment 와 Service를 지우고 다시 생성한다. (설정 추가)  [nginx-ingress-controller-kafka.yaml](manifest/1nginx-ingress-controller-kafka.yaml) 이용해서 지웠다가 생성
-```bash
-    $ kubectl delete -f nginx-ingress-controller-kafka.yaml        
-    $ kubectl apply -f nginx-ingress-controller-kafka.yaml
- ```
+ 
 ## Step 2. SSL 인증서 생성
 * 목적 : `HTTPS 인증을 위한 인증서, kafka와의 통신을 위한 keystore, truststore를 생성하고 secret으로 변환`
 * 생성 순서 : 
 	* cert-manager가 설치되어 있고, tmaxcloud-issuer (ClusterIssuer) 가 생성되어 있다고 가정한다. 
-		* 설치가 안되어 있는 경우, [tmaxcloud-issuer.yaml](manifest/tmaxcloud-issuer.yaml) 실행 `ex) kubectl apply -f tmaxcloud-issuer.yaml`) 
+		* cert-manager 설치는 https://cert-manager.io/docs/installation  	
+		* 생성이 안되어 있는 경우, [tmaxcloud-issuer.yaml](manifest/tmaxcloud-issuer.yaml) 실행 `ex) kubectl apply -f tmaxcloud-issuer.yaml`) 
 	* [hyperauth_certs.yaml](manifest/hyperauth_certs.yaml) 의 변수를 상황에 맞게 치환한다. 안쓰는 변수 부분은 지워준다.
 		* Hyperauth
 			* Hyperauth를 IP로 노출하는 경우, {HYPERAUTH_EXTERNAL_IP} 세팅, dnsName 부분 전체 삭제
 			* Hyperauth를 DNS로 노출하는 경우, {HYPERAUTH_EXTERNAL_DNS} 세팅, ipAddresses 부분 전체 삭제
 		* Kafka
-			* Kafka를 외부로 노출하지 않는 경우, {INGRESS_CONTROLLER_DNS} 삭제, ipAddresses 부분 전체 삭제
-			* Kafka를 외부로 IP로 노출하는 경우, {INGRESS_CONTROLLER_IP} 세팅
+			* Kafka를 외부로 노출하지 않는 경우, {KAFKA_EXTERNAL_DNS} 삭제, ipAddresses 부분 전체 삭제
+			* Kafka를 외부로 IP로 노출하는 경우, {KAFKA_EXTERNAL_IP} 세팅
 				* 3개의 External IP로 노출하는 경우, 3개 모두 세팅
 				* NodePort로 노출하는 경우, Node IP 세팅
-			* Kafka를 Ingress Controller를 통해 노출하는 경우, 적절한 값으로 세팅
+			* Kafka를 Ingress Controller를 통해 노출하는 경우, 적절한 값으로 세팅 ex) Ingress Controller IP 혹은 Public DNS
 	*  [hyperauth_certs.yaml](manifest/hyperauth_certs.yaml) 실행 `ex) kubectl apply -f hyperauth_certs.yaml`)
-	*  	 	  	
-		 	
+	*  Hyperauth Namespace에 hyperauth-https-secret, hyperauth-kafka-jks, kafka-jks Secret이 생성된걸 확인한다.
+```bash
+    $ kubectl get secrets -n hyperauth
+ ``` 	 	  		 	
+ 	* hyperauth-https-secret으로 부터 root-ca, hyperauth 인증서를 추출해서 kubernetes pki 에 위치한다.
+```bash
+    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['tls\.crt']}" | base64 -d > /etc/kubernetes/pki/hyperauth.crt
+    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['ca\.crt']}" | base64 -d > /etc/kubernetes/pki/hypercloud-root-ca.crt
+ ``` 
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt, /etc/kubernetes/pki/hyperauth.crt 로 cp
-    * MetalLB에 의해 생성된 Loadbalancer type의 ExternalIP만 인증
-
 
 ## Step 3. HyperAuth Deployment 배포
 * 목적 : `HyperAuth 설치`
@@ -184,18 +184,20 @@ Storage: 5Gi
 ## Step 4. Kafka Topic Server 설치
 * 목적 : `Hyperauth의 Event를 Subscribe 할수 있는 kafka server 설치`
 * 생성 순서 :
-    * [4.kafka_init.yaml](manifest/4.kafka_init.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
-    * NGINX_INGRESS_CONTROLLER_EXTERNAL_IP=$(kubectl describe service ingress-nginx-system-controller -n ingress-nginx-system | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    * [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
+ 	* [4.kafka_init.yaml](manifest/4.kafka_init.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
+	* [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 의 변수를 상황에 맞게 세팅한다.
+    		* Kafka를 외부로 노출하지 않는 경우, KAFKA_ADVERTISED_LISTENERS, KAFKA_LISTENERS, KAFKA_LISTENER_SECURITY_PROTOCOL_MAP 환경변수의 OUTSIDE 부분을 모두 삭제한다.
+    		* Kafka를 Ingress Controller를 이용해 외부로 노출하는 경우, {INGRESS_CONTROLLER_URL}를 적절한 값으로 세팅
+	* [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
 * 비고 : 
-    * hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
+	* hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
     
 ## Step 5. Kubernetes OIDC 연동
 * 목적 : `Kubernetes의 RBAC 시스템과 HyperAuth 인증 연동`
 * 생성 순서 :
-    * Kubernetes Cluster Master Node에 접속
-    * {HYPERAUTH_SERVICE_IP} = $(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    * `/etc/kubernetes/manifests/kube-apiserver.yaml` 의 spec.containers[0].command[] 절에 아래 command를 추가
+	* Kubernetes Cluster Master Node에 접속
+	* {HYPERAUTH_SERVICE_IP} = $(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
+	* `/etc/kubernetes/manifests/kube-apiserver.yaml` 의 spec.containers[0].command[] 절에 아래 command를 추가
     
     ```yaml
     --oidc-issuer-url=https://{HYPERAUTH_SERVICE_IP}/auth/realms/tmax
