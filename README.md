@@ -168,15 +168,6 @@ Storage: 5Gi
     * HyperAuth Admin Console에 접속 확인
         * `kubectl get svc hyperauth -n hyperauth` 명령어로 IP 확인
         * 계정 : admin/admin
-    * [3.tmax-realm-export.json](manifest/3.tmax-realm-export.json), [tmaxRealmImport.sh](manifest/tmaxRealmImport.sh) 다운 후, 아래 명령어를 실행하여 기본 Tmax Realm 및 K8s admin 계정 생성
-```bash
-    $ export HYPERAUTH_SERVICE_IP=$(kubectl describe service hyperauth -n hyperauth | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ echo $HYPERAUTH_SERVICE_IP
-    $ export HYPERCLOUD_CONSOLE_IP=$(kubectl describe service console-lb -n console-system | grep 'LoadBalancer Ingress' | cut -d ' ' -f7)
-    $ echo $HYPERCLOUD_CONSOLE_IP
-    $ chmod 755 tmaxRealmImport.sh
-    $ ./tmaxRealmImport.sh $HYPERAUTH_SERVICE_IP $HYPERCLOUD_CONSOLE_IP
-```
 * 비고 :
     * K8s admin 기본 계정 정보 : hc-admin@tmax.co.kr/Tmaxadmin1!
     * HyperAuth User 메뉴에서 비밀번호는 변경 가능, ID를 위해서는 clusterrole도 변경 필요
