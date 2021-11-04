@@ -17,6 +17,7 @@ spec:
     - {HYPERAUTH_EXTERNAL_IP}  
   dnsNames:
     - {HYPERAUTH_EXTERNAL_DNS}
+    - tmax-cloud
   issuerRef:
     kind: ClusterIssuer
     group: cert-manager.io
@@ -67,6 +68,7 @@ spec:
     - kafka-1.hyperauth
     - kafka-2.hyperauth
     - kafka-3.hyperauth
+    - tmax-cloud
     - {KAFKA_EXTERNAL_DNS}
   ipAddresses:
     - {KAFKA_EXTERNAL_IP}
