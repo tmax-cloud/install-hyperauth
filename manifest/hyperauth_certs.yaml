@@ -69,9 +69,8 @@ spec:
     - kafka-2.hyperauth
     - kafka-3.hyperauth
     - tmax-cloud
-    - {KAFKA_EXTERNAL_DNS}
-  ipAddresses:
-    - {KAFKA_EXTERNAL_IP}
+    - "*.*.*.svc"
+    - kafka-kafka-bootstrap.hyperauth
   isCA: false
   keySize: 2048
   duration: 8760h # 360d=1y
