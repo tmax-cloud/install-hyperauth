@@ -172,6 +172,32 @@ Storage: 5Gi
  	* [3.kafka_deployment.yaml](manifest/3.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 3.kafka_deployment.yaml`
 * 비고 : 
 	* hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
+	* [kafka_client.yaml](manifest/3.kafka_client.yaml) 로 pub/sub테스트 가능
+		*  kafka_client pod에 접속 후
+			* Producer : 
+			```bash
+				export PASSWORD=tmax@23
+				export KAFKA_OPTS=" \
+				  -Djavax.net.ssl.trustStore=/opt/kafka/certificates/truststore.jks \
+				  -Djavax.net.ssl.trustStorePassword=$PASSWORD \
+				  -Djavax.net.ssl.trustStoreType=PKCS12"
+			  	/opt/kafka/bin/kafka-console-producer.sh --broker-list \
+				  kafka-kafka-bootstrap.hyperauth:9092 --topic tmax\
+				  --producer-property 'security.protocol=SSL'
+			```
+			* Consumer :
+			```bash
+				export PASSWORD=tmax@23
+				export KAFKA_OPTS=" \
+				  -Djavax.net.ssl.trustStore=/opt/kafka/certificates/truststore.jks \
+				  -Djavax.net.ssl.trustStorePassword=$PASSWORD \
+				  -Djavax.net.ssl.trustStoreType=PKCS12"
+				/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server \
+				  kafka-kafka-bootstrap.hyperauth:9092 --topic tmax\
+				  --consumer-property 'security.protocol=SSL' \
+				  --group consumer1
+			```
+ 
     
 ## Step 5. Kubernetes OIDC 연동
 * 목적 : `Kubernetes의 RBAC 시스템과 HyperAuth 인증 연동`
