@@ -142,12 +142,6 @@ Storage: 5Gi
 		* Hyperauth
 			* Hyperauth를 IP로 노출하는 경우, {HYPERAUTH_EXTERNAL_IP} 세팅, dnsName 부분 전체 삭제
 			* Hyperauth를 DNS로 노출하는 경우, {HYPERAUTH_EXTERNAL_DNS} 세팅, ipAddresses 부분 전체 삭제
-		* Kafka
-			* Kafka를 외부로 노출하지 않는 경우, {KAFKA_EXTERNAL_DNS} 삭제, ipAddresses 부분 전체 삭제
-			* Kafka를 외부로 IP로 노출하는 경우, {KAFKA_EXTERNAL_IP} 세팅
-				* 3개의 External IP로 노출하는 경우, 3개 모두 세팅
-				* NodePort로 노출하는 경우, Node IP 세팅
-			* Kafka를 Ingress Controller를 통해 노출하는 경우, 적절한 값으로 세팅 ex) Ingress Controller IP 혹은 Public DNS
 	*  [hyperauth_certs.yaml](manifest/hyperauth_certs.yaml) 실행 `ex) kubectl apply -f hyperauth_certs.yaml`)
 	*  Hyperauth Namespace에 hyperauth-https-secret, hyperauth-kafka-jks, kafka-jks Secret이 생성된걸 확인한다.
 ```bash
@@ -175,11 +169,7 @@ Storage: 5Gi
 ## Step 4. Kafka Topic Server 설치
 * 목적 : `Hyperauth의 Event를 Subscribe 할수 있는 kafka server 설치`
 * 생성 순서 :
- 	* [4.kafka_init.yaml](manifest/4.kafka_init.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
-	* [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 의 변수를 상황에 맞게 세팅한다.
-    		* Kafka를 외부로 노출하지 않는 경우, KAFKA_ADVERTISED_LISTENERS, KAFKA_LISTENERS, KAFKA_LISTENER_SECURITY_PROTOCOL_MAP 환경변수의 OUTSIDE 부분을 모두 삭제한다.
-    		* Kafka를 Ingress Controller를 이용해 외부로 노출하는 경우, {INGRESS_CONTROLLER_URL}를 적절한 값으로 세팅
-	* [5.kafka_deployment.yaml](manifest/5.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 5.kafka_deployment.yaml`
+ 	* [3.kafka_deployment.yaml](manifest/3.kafka_deployment.yaml) 실행 `ex) kubectl apply -f 3.kafka_deployment.yaml`
 * 비고 : 
 	* hyperauth 이미지 tmaxcloudck/hyperauth:b1.0.15.31 이후부터 설치 적용할 것!
     
@@ -211,12 +201,15 @@ Storage: 5Gi
 
 * 생성 순서 :
     * ServiceMonitor 생성
-    * [6.hyperauth_service_monitor.yaml](manifest/6.hyperauth_service_monitor.yaml) 실행 `ex) kubectl apply -f 4.kafka_init.yaml`
+    * [4.hyperauth_service_pod_monitor.yaml](manifest/4.hyperauth_service_pod_monitor.yaml) 실행 `ex) kubectl apply -f 4.hyperauth_service_pod_monitor.yaml`
     
 * 비고 :
     * 자동으로 Prometheus가 수집을 시작함
     * grafana dashboard import
-        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/hyperauth_metric.json 내용 붙여넣기
+        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/hyperauth_grafana_dashboard.json 내용 붙여넣기
+        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/kafka_grafana_dashboard.json 내용 붙여넣기
+        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/kafka_exporter_grafana_dashboard.json 내용 붙여넣기
+        * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/zookeeper_grafana_dashboard.json 내용 붙여넣기
 
 
 ## 참고자료 ( Ingress를 사용해서 hyperauth를 노출하려고 하는 경우 )
