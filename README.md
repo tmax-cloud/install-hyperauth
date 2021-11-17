@@ -129,8 +129,10 @@ Storage: 5Gi
  ``` 	 	  		 	
  	* hyperauth-https-secret으로 부터 root-ca, hyperauth 인증서를 추출해서 kubernetes pki 에 위치한다.
 ```bash
-    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['tls\.crt']}" | base64 -d > /etc/kubernetes/pki/hyperauth.crt
-    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['ca\.crt']}" | base64 -d > /etc/kubernetes/pki/hypercloud-root-ca.crt
+    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['tls\.crt']}" | base64 -d > ./hyperauth.crt
+    $ kubectl get secret hyperauth-https-secret -n hyperauth -o jsonpath="{['data']['ca\.crt']}" | base64 -d > ./hypercloud-root-ca.crt
+    $ cp ./hyperauth.crt /etc/kubernetes/pki/hyperauth.crt
+    $ cp ./hypercloud-root-ca.crt /etc/kubernetes/pki/hypercloud-root-ca.crt
  ``` 
 * 비고 : 
     * Kubernetes Master가 다중화 된 경우, hypercloud-root-ca.crt, hyperauth.crt를 각 Master 노드들의 /etc/kubernetes/pki/hypercloud-root-ca.crt, /etc/kubernetes/pki/hyperauth.crt 로 cp
