@@ -32,8 +32,6 @@ Storage: 5Gi
 
 ## Prerequisites
 * Java binary
-* openssl binary
-* keytool binary
 * jq binary
 * Storage class
   * 아래 명령어를 통해 storage class가 설치되어 있는지 확인한다.
@@ -57,8 +55,6 @@ Storage: 5Gi
  	$ export POSTGRES_VERSION=9.6.2-alpine
 	$ export HYPERAUTH_VERSION=<tag1>
    	$ export REGISTRY=<REGISTRY_IP_PORT>
-	$ export ZOOKEEPER_VERSION=3.4.6
-	$ export KAFKA_VERSION=2.12-2.0.1
 	
 	* <tag1>에는 설치할 hyperauth 버전 명시
 		예시: $ export HYPERAUTH_VERSION=1.1.1.10
@@ -74,12 +70,6 @@ Storage: 5Gi
 	# hyperauth
 	$ sudo docker pull tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION}
 	$ sudo docker save tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} > hyperauth_b${HYPERAUTH_VERSION}.tar
-	
-	# kafka, zookeeper
-	$ sudo docker pull wurstmeister/zookeeper:${ZOOKEEPER_VERSION}
-	$ sudo docker save wurstmeister/zookeeper:${ZOOKEEPER_VERSION} > zookeeper_${ZOOKEEPER_VERSION}.tar
-	$ sudo docker pull wurstmeister/kafka:${KAFKA_VERSION}
-	$ sudo docker save wurstmeister/kafka:${KAFKA_VERSION} > kafka_${KAFKA_VERSION}.tar
     ```
   
 2. 위의 과정에서 생성한 tar 파일들을 `폐쇄망 환경으로 이동`시킨 뒤 사용하려는 registry에 이미지를 push한다.
@@ -89,20 +79,14 @@ Storage: 5Gi
     # Load Images
 	$ sudo docker load < postgres_${POSTGRES_VERSION}.tar
 	$ sudo docker load < hyperauth_b${HYPERAUTH_VERSION}.tar
-        $ sudo docker load < kafka_${KAFKA_VERSION}.tar
-	$ sudo docker load < zookeeper_${ZOOKEEPER_VERSION}.tar
 
     # Change Image's Tag For Private Registry
 	$ sudo docker tag postgres:${POSTGRES_VERSION} ${REGISTRY}/postgres:${POSTGRES_VERSION}
 	$ sudo docker tag tmaxcloudck/hyperauth:b${HYPERAUTH_VERSION} ${REGISTRY}/hyperauth:b${HYPERAUTH_VERSION}
-	$ sudo docker tag wurstmeister/kafka:${KAFKA_VERSION} ${REGISTRY}/kafka:${KAFKA_VERSION}
-	$ sudo docker tag wurstmeister/zookeeper:${ZOOKEEPER_VERSION} ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     
     # Push Images
 	$ sudo docker push ${REGISTRY}/postgres:${POSTGRES_VERSION}
 	$ sudo docker push ${REGISTRY}/hyperauth:b${HYPERAUTH_VERSION}
-    	$ sudo docker push ${REGISTRY}/kafka:${KAFKA_VERSION}
-	$ sudo docker push ${REGISTRY}/zookeeper:${ZOOKEEPER_VERSION}
     ```
 
 ## 설치 가이드
@@ -120,10 +104,6 @@ Storage: 5Gi
     $ sed -i 's/POSTGRES_VERSION/'${POSTGRES_VERSION}'/g' 1.initialization.yaml
     $ export HYPERAUTH_VERSION=b1.1.1.10
     $ sed -i 's/HYPERAUTH_VERSION/'${HYPERAUTH_VERSION}'/g' 2.hyperauth_deployment.yaml
-    $ export ZOOKEEPER_VERSION=3.4.6
-    $ sed -i 's/ZOOKEEPER_VERSION/'${ZOOKEEPER_VERSION}'/g' 5.kafka_deployment.yaml
-    $ export KAFKA_VERSION=2.12-2.0.1
-    $ sed -i 's/KAFKA_VERSION/'${KAFKA_VERSION}'/g' 5.kafka_deployment.yaml
  ```
 * 생성 순서 : [1.initialization.yaml](manifest/1.initialization.yaml) 실행 `ex) kubectl apply -f 1.initialization.yaml`)
 * 비고 : 아래 명령어 수행 후, Postgre Admin 접속 확인
