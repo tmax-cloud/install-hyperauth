@@ -182,6 +182,7 @@ data:
         {
           "username": "hc-admin@tmax.co.kr",
           "enabled": true,
+          "emailVerified": true,
           "email": "hc-admin@tmax.co.kr",
           "credentials": [
             {
