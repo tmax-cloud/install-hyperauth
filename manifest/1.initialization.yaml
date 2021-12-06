@@ -127,7 +127,10 @@ spec:
             - name: POSTGRES_DB
               value: keycloak
             - name: POSTGRES_PASSWORD
-              value: keycloak
+              valueFrom:
+                secretKeyRef:
+                  name: passwords
+                  key: DB_PASSWORD
             - name: TZ
               value: Asia/Seoul
           resources:
