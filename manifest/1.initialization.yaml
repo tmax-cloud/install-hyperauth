@@ -181,28 +181,6 @@ metadata:
 data:
   tmax-realm.json: |
     {
-      "users": [
-        {
-          "username": "hc-admin@tmax.co.kr",
-          "enabled": true,
-          "emailVerified": true,
-          "email": "hc-admin@tmax.co.kr",
-          "credentials": [
-            {
-              "type": "password",
-              "value": "Tmaxadmin1!",
-              "temporary": false
-            }
-          ],
-          "clientRoles": {
-            "account": [
-              "view-profile",
-              "manage-account"
-            ]
-          },
-          "groups": ["hypercloud5"]
-        }
-      ],
       "id": "tmax",
       "realm": "tmax",
       "notBefore": 1618199421,
@@ -769,6 +747,26 @@ data:
       "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
       "webAuthnPolicyPasswordlessAcceptableAaguids": [],
       "users": [
+        {
+          "username": "hc-admin@tmax.co.kr",
+          "enabled": true,
+          "emailVerified": true,
+          "email": "hc-admin@tmax.co.kr",
+          "credentials": [
+            {
+              "type": "password",
+              "value": "Tmaxadmin1!",
+              "temporary": false
+            }
+          ],
+          "clientRoles": {
+            "account": [
+              "view-profile",
+              "manage-account"
+            ]
+          },
+          "groups": ["hypercloud5"]
+        },
         {
           "id": "3fc4854d-a416-48fc-bd54-dfa6f92be66a",
           "createdTimestamp": 1636954461156,
