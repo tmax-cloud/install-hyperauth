@@ -105,7 +105,9 @@ Storage: 5Gi
     $ export HYPERAUTH_VERSION=b1.1.1.10
     $ sed -i 's/HYPERAUTH_VERSION/'${HYPERAUTH_VERSION}'/g' 2.hyperauth_deployment.yaml
  ```
-* 생성 순서 : [1.initialization.yaml](manifest/1.initialization.yaml) 실행 `ex) kubectl apply -f 1.initialization.yaml`)
+* 생성 순서 :
+	* kakfa namespace에 strimzi-cluster-operator가 깔려있지 않으면, [strimzi-cluster-operator.yaml](manifest/strimzi-cluster-operator.yaml) 실행 `ex) kubectl apply -f strimzi-cluster-operator.yaml`) 
+	* [1.initialization.yaml](manifest/1.initialization.yaml) 실행 `ex) kubectl apply -f 1.initialization.yaml`)
 * 비고 : 아래 명령어 수행 후, Postgre Admin 접속 확인
 ```bash
     $ kubectl exec -it $(kubectl get pods -n hyperauth | grep postgre | cut -d ' ' -f1) -n hyperauth -- bash
