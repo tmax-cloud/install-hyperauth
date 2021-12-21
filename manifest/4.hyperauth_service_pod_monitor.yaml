@@ -37,7 +37,7 @@ spec:
       strimzi.io/kind: cluster-operator
   namespaceSelector:
     matchNames:
-      - hyperauth
+      - kafka
   podMetricsEndpoints:
   - path: /metrics
     port: http
