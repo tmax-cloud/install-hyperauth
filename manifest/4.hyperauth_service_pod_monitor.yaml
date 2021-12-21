@@ -19,6 +19,9 @@ metadata:
     app: hyperauth
     release: prometheus
 spec:
+  namespaceSelector:
+    matchNames:
+      - hyperauth
   selector:
     matchLabels:
       app: keycloak
