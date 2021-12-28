@@ -92,11 +92,10 @@ metadata:
 spec:
   ports:
   - port: 5432
-    nodePort: 31226
   selector:
     app: postgresql
     tier: postgreSQL
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -120,7 +119,7 @@ spec:
     spec:
       serviceAccount: hyperauth-admin
       containers:
-        - image: postgres:POSTGRES_VERSION  #9.6.2-alpine
+        - image: postgres:9.6.2-alpine
           name: postgresql
           env:
             - name: POSTGRES_USER

@@ -1,30 +1,3 @@
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: hyperauth-certificate
-  namespace: hyperauth
-spec:
-  secretName: hyperauth-https-secret
-  duration: 8760h # 360d=1y
-  renewBefore: 720h # 30d
-  isCA: false
-  usages:
-    - digital signature
-    - key encipherment
-    - server auth
-    - client auth
-  ipAddresses:
-    - {HYPERAUTH_EXTERNAL_IP}  
-  dnsNames:
-    - {HYPERAUTH_EXTERNAL_DNS}
-    - tmax-cloud
-  issuerRef:
-    kind: ClusterIssuer
-    group: cert-manager.io
-    name: tmaxcloud-issuer
-    
----
-
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
