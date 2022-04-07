@@ -168,6 +168,7 @@ data:
     {
       "id": "tmax",
       "realm": "tmax",
+      "displayName": "tmax",
       "notBefore": 1642749441,
       "revokeRefreshToken": true,
       "refreshTokenMaxReuse": 2,
