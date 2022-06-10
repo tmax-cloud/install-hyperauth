@@ -1,5 +1,7 @@
 # HyperAuth 설치 가이드
-
+## 개요
+* Hyperauth
+    * OIDC 와 SSO 프로토콜을 지원하는 인증서버로써 keycloak 을 바탕으로 여러 기능을 추가함 	 
 ## 구성 요소 및 버전
 * hyperauth
     * [tmaxcloudck/hyperauth:latest](https://hub.docker.com/layers/tmaxcloudck/hyperauth/latest/images/sha256-b4c423520434c37f4c1166f94de7cfa49be43f51efe9f19da10776375b3fd840?context=explore)
