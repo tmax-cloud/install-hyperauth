@@ -6,7 +6,7 @@ metadata:
   labels:
     app: hyperauth
 spec:
-  replicas: 2
+  replicas: 2 
   selector:
     matchLabels:
       app: hyperauth
@@ -31,6 +31,9 @@ spec:
       - name: realm
         configMap:
           name: tmax-realm-import-config
+      - name: hyperauth-admin-token
+        secret:
+          secretName: hyperauth-admin-token
       containers:
       - name: hyperauth
         image: tmaxcloudck/hyperauth:latest  #latest
@@ -55,7 +58,7 @@ spec:
         - name: DB_VENDOR     # postgres / tibero
           value: "postgres"     
         - name: DB_PORT       # postgres : 31226, tibero : 32571
-          value: "31226"     
+          value: "31226"   
         - name: DB_ADDR
           valueFrom:
             fieldRef:
@@ -99,6 +102,8 @@ spec:
           mountPath: /opt/jboss/keycloak/welcome-content/profile-picture
         - name: realm
           mountPath: /tmp/realm-import
+        - name: hyperauth-admin-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
         readinessProbe:
           httpGet:
             path: /auth/realms/master
