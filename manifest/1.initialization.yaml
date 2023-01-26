@@ -1067,7 +1067,7 @@ data:
           "enabled": true,
           "alwaysDisplayInConsole": false,
           "clientAuthenticatorType": "client-secret",
-          "secret": "2233489a-1f76-4025-9dfd-534543c9d637",
+          "secret": "tmax_client_secret",
           "redirectUris": [
             "*"
           ],
