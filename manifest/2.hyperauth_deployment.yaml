@@ -34,6 +34,13 @@ spec:
       - name: hyperauth-admin-token
         secret:
           secretName: hyperauth-admin-token
+# Enable If use External-oidc-provider (for initech or other mTLS)
+#      - name: external-crt
+#        secret:
+#          secretName: external-oidc-provider-https-secret
+#          items:
+#          - key: ca.crt
+#            path: ca.crt
       containers:
       - name: hyperauth
         image: tmaxcloudck/hyperauth:latest  #latest
@@ -87,7 +94,16 @@ spec:
         - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
           value: "2"
         - name: KAFKA_BROKERS_ADDR
-          value: "kafka-kafka-bootstrap.hyperauth:9092"  
+          value: "kafka-kafka-bootstrap.hyperauth:9092"
+# Enable Below ENVs if use External-oidc-provider (for initech or other mTLS)
+#        - name: X509_CA_BUNDLE
+#          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt/ca.crt
+#        - name: EXTERNAL_OIDC_PROVIDER_AUTH_URL
+#          value: "https://tmax.initech.com/externalauth"
+#        - name: EXTERNAL_OIDC_PROVIDER_TOKEN_URL
+#          value: "https://tmax.initech.com/token"
+#        - name: EXTERNAL_OIDC_PROVIDER_PROFILE_URL
+#          value: "https://tmax.initech.com/user"
         ports:
         - name: http
           containerPort: 8080
@@ -106,6 +122,9 @@ spec:
           mountPath: /tmp/realm-import
         - name: hyperauth-admin-token
           mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+# Enable If use External-oidc-provider (for initech or other mTLS)
+#        - name: external-crt
+#          mountPath: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         readinessProbe:
           httpGet:
             path: /auth/realms/master
