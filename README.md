@@ -98,6 +98,8 @@ Storage: 5Gi
 4. [Kafka Topic Server 설치](#step-4-kafka-topic-server-%EC%84%A4%EC%B9%98)
 5. [Kubernetes OIDC 연동](#step-5-kubernetes-oidc-%EC%97%B0%EB%8F%99)
 
+추가1. [External-OIDC-Provider 연동]
+
 ## Step 1. 초기화 작업 및 yaml 수정
 * 목적 : `HyperAuth 구축을 위한 초기화 작업, Secret생성 및 DB 구축, Yaml 버전 수정`
 * 아래의 command를 수정하여 사용하고자 하는 image 버전 정보를 수정한다.
@@ -223,7 +225,23 @@ Storage: 5Gi
         * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/kafka_exporter_grafana_dashboard.json 내용 붙여넣기
         * grafana - import - https://github.com/tmax-cloud/install-hyperauth/blob/main/manifest/zookeeper_grafana_dashboard.json 내용 붙여넣기
 
-
+## 추가. External-OIDC-Provider 연동
+* 목적 : Initech의 SSO시스템을 External-OIDC-Provider를 통해서 IDP로 사용
+* 생성 순서
+    * External-OIDC-Provider 생성 : [External-OIDC_Provider 설치가이드](https://github.com/tmax-cloud/external-oidc-provider)
+    * [2.hyperauth_deployment.yaml](manifest/2.hyperauth_deployment.yaml) 수정  
+      1. ``` #Enable ~ if use External-oidc-provider ``` 로 주석 처리된 yaml 필드를 모두 주석 해제  
+      2. External-OIDC-Provider의 도메인 (SERVER_URL 변수)을 아래 ENV로 등록
+         ```yaml
+          - name : EXTERNAL_OIDC_PROVIDER_AUTH_URL  
+            value : https:// {external-oidc-provider.SERVER_URL} /externalauth  
+          - name : EXTERNAL_OIDC_PROVIDER_TOKEN_URL  
+            value : https:// {external-oidc-provider.SERVER_URL} /token  
+          - name : EXTERNAL_OIDC_PROVIDER_PROFILE_URL  
+            value : https:// {external-oidc-provider.SERVER_URL} /profile
+         ```  
+      3. 이후 본 설치가이드를 1. [초기화 작업](#step-1-%EC%B4%88%EA%B8%B0%ED%99%94-%EC%9E%91%EC%97%85) 부터 진행 
+      
 ## 참고자료 ( Ingress를 사용해서 hyperauth를 노출하려고 하는 경우 )
 * hyperauth_traefik_ingress.yaml 에서 host 및 hosts를 환경에 맞는 dns로 수정하고 apply한다.
 * 모든 마스터 노드에 관해서 self-signed 인증서의 경우, os의 ca store에 등록하는 과정을 거쳐야 k8s가 공인 인증서로 써 신뢰한다. 
