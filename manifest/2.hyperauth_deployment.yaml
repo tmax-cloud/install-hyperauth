@@ -95,6 +95,8 @@ spec:
           value: "2"
         - name: KAFKA_BROKERS_ADDR
           value: "kafka-kafka-bootstrap.hyperauth:9092"
+        - name: USER_DELETE_SCHEDULER
+          value: "true"
 # Enable Below ENVs if use External-oidc-provider (for initech or other mTLS)
 #        - name: X509_CA_BUNDLE
 #          value: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt/ca.crt
